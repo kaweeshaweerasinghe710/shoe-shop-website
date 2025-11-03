@@ -1,0 +1,258 @@
+.payment-page {
+  min-height: 100vh;
+  background: #f8f9fa;
+  padding: 3rem 0;
+}
+
+.payment-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.payment-container h1 {
+  font-size: 2.5rem;
+  color: #1e3c72;
+  margin-bottom: 2rem;
+  font-weight: 700;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.empty-state h2 {
+  font-size: 1.8rem;
+  color: #1e3c72;
+  margin-bottom: 1.5rem;
+}
+
+.login-link,
+.shop-link {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: #1e3c72;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.login-link:hover,
+.shop-link:hover {
+  background: #2a5298;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(30, 60, 114, 0.3);
+}
+
+.payment-content {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 2rem;
+}
+
+.payment-form-section,
+.order-summary-section {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.payment-form-section h2,
+.order-summary-section h2 {
+  font-size: 1.8rem;
+  color: #1e3c72;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+}
+
+.demo-notice {
+  padding: 1rem;
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  color: #856404;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.form-group input {
+  padding: 0.8rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #1e3c72;
+}
+
+.pay-btn {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #26a0da 0%, #314755 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+}
+
+.pay-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(38, 160, 218, 0.3);
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.order-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.order-item img {
+  width: 70px;
+  height: 70px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.order-item-details {
+  flex: 1;
+}
+
+.order-item-details h4 {
+  font-size: 1rem;
+  color: #1e3c72;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+
+.order-item-details p {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 0.2rem;
+}
+
+.item-price {
+  font-weight: 700;
+  color: #1e3c72;
+  font-size: 1rem;
+}
+
+.order-total {
+  border-top: 2px solid #e0e0e0;
+  padding-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1e3c72;
+}
+
+.total-amount {
+  font-size: 1.8rem;
+}
+
+.security-badges {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: #1e3c72;
+}
+
+.badge svg {
+  flex-shrink: 0;
+}
+
+.badge span {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+@media (max-width: 968px) {
+  .payment-content {
+    grid-template-columns: 1fr;
+  }
+
+  .order-summary-section {
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 0 1rem;
+  }
+
+  .payment-container h1 {
+    font-size: 2rem;
+  }
+
+  .payment-form-section,
+  .order-summary-section {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
