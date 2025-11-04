@@ -3,12 +3,24 @@ const router = express.Router();
 const Product = require('../models/Product');
 
 // Get all products
+// GET all products (with optional filter)
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find();
+    const { category, minPrice, maxPrice } = req.query;
+    const query = {};
+
+    if (category) query.category = category;
+    if (minPrice || maxPrice) {
+      query.price = {};
+      if (minPrice) query.price.$gte = Number(minPrice);
+      if (maxPrice) query.price.$lte = Number(maxPrice);
+    }
+
+    const products = await Product.find(query);
     res.json(products);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error(err);
+    res.status(500).json({ message: 'Failed to fetch products' });
   }
 });
 
@@ -21,6 +33,17 @@ router.post('/', async (req, res) => {
     res.status(201).json(newProduct);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+
+// PUT update product
+router.put('/:id', async (req, res) => {
+  try {
+    const updated = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!updated) return res.status(404).json({ message: 'Product not found' });
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ message: 'Error updating product' });
   }
 });
 

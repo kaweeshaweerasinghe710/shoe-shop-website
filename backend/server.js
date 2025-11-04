@@ -19,6 +19,9 @@ app.use('/api/reviews', reviewRoutes);
 const messageRoutes = require('./routes/messageRoutes');
 app.use('/api/messages', messageRoutes)
 
+// categoryRoutes requires the Category model
+const categoryRoutes = require('./routes/categoryRoutes');
+app.use('/api/categories', categoryRoutes);
 
 //productRoutes requires the Review model
 const productRoutes = require('./routes/productRoutes');
@@ -27,6 +30,24 @@ app.use('/api/products', productRoutes);
 //cartRoutes requires the Review model
 const cartRoutes = require('./routes/cartRoutes');
 app.use('/api/cart', cartRoutes);
+
+//orderRoutes requires the Review model
+const orderRoutes = require('./routes/orderRoutes');
+app.use('/api/orders', orderRoutes);
+
+//userRoutes requires the Review model
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
+
+// offerRoutes
+const offerRoutes = require('./routes/offerRoutes');
+app.use('/api/offers', offerRoutes);
+
+// shopRoutes
+const shopRoutes = require('./routes/shopRoutes');
+app.use('/api/shop', shopRoutes);
+
+
 
 // health check
 app.get('/', (req, res) => res.send('API is running'));
