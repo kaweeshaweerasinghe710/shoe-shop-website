@@ -33,7 +33,7 @@ const Home = () => {
     <div className="home">
       <section className="hero">
         <div className="hero-content">
-          <h1>Welcome to Elite Shoe Shop</h1>
+          <h1>Welcome to Onero Shoe Shop</h1>
           <p>Discover the perfect blend of style, comfort, and quality</p>
           <Link to="/shop" className="cta-button">
             {t('shopNow')}

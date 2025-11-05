@@ -9,7 +9,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>{t('shopName')}</h3>
+          <h3>Onero Shoe House</h3>
           <p>Your trusted destination for quality footwear, bags, and accessories. Style meets comfort at Elite Shoe Shop.</p>
         </div>
 
@@ -51,14 +51,14 @@ const Footer = () => {
 
         <div className="footer-section">
           <h4>Contact Info</h4>
-          <p>Phone: +1 (555) 123-4567</p>
-          <p>Email: info@eliteshoeshop.com</p>
-          <p>Address: 123 Fashion Street, Style City</p>
+          <p>Phone:+94 41 22 72 556</p>
+          <p>Email: info@oneroshoeshop.com</p>
+          <p>Address: Onero shoe house,Main street,Urubokka</p>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; 2024 Elite Shoe Shop. All rights reserved.</p>
+        <p>&copy; 2025 Elite Shoe Shop. All rights reserved.</p>
       </div>
     </footer>
   );

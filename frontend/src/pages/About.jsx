@@ -15,7 +15,7 @@ const About = () => {
         <section className="about-section">
           <h2>Our Story</h2>
           <p>
-            Welcome to Elite Shoe Shop, where style meets comfort and quality. Since our establishment,
+            Welcome to Onero Shoe Shop, where style meets comfort and quality. Since our establishment,
             we've been dedicated to providing our customers with the finest selection of footwear, bags,
             and accessories from around the world.
           </p>
@@ -86,31 +86,29 @@ const About = () => {
           <div className="store-info">
             <div className="info-item">
               <h4>Address</h4>
-              <p>123 Fashion Street, Style City, SC 12345</p>
+              <p>Onero Fashion House,Main street,Urubokka</p>
             </div>
             <div className="info-item">
               <h4>Hours</h4>
-              <p>Monday - Saturday: 9:00 AM - 8:00 PM</p>
-              <p>Sunday: 10:00 AM - 6:00 PM</p>
+              <p>Monday - Saturday: 8:00 AM - 7:00 PM</p>
+              <p>Sunday: 7:00 AM - 6:00 PM</p>
             </div>
             <div className="info-item">
               <h4>Contact</h4>
-              <p>Phone: +1 (555) 123-4567</p>
-              <p>Email: info@eliteshoeshop.com</p>
+              <p>Phone:+941 2272 556</p>
+              <p>Email: info@oneroshoeshop.com</p>
             </div>
           </div>
 
           <div className="map-container">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.4737824489185!2d-73.98823492346662!3d40.74844097138734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1699999999999!5m2!1sen!2sus"
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5417.286972942966!2d80.63411295389419!3d6.3048942059989574!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae157285230daf7%3A0x1201ae610673e2b4!2sOnero%20Fashion%20House!5e0!3m2!1sen!2slk!4v1762354927623!5m2!1sen!2slk" 
               width="100%"
               height="400"
               style={{ border: 0, borderRadius: '12px' }}
               allowFullScreen=""
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Store Location"
-            ></iframe>
+              title="Store Location"></iframe>
           </div>
         </section>
       </div>

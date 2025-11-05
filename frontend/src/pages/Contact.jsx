@@ -37,8 +37,8 @@ const Contact = () => {
               </svg>
             </div>
             <h3>Email Us</h3>
-            <p>info@eliteshoeshop.com</p>
-            <p>support@eliteshoeshop.com</p>
+            <p>info@oneroshoeshop.com</p>
+            <p>support@oneroshoeshop.com</p>
           </div>
 
           <div className="info-card">
@@ -48,8 +48,8 @@ const Contact = () => {
               </svg>
             </div>
             <h3>Call Us</h3>
-            <p>+1 (555) 123-4567</p>
-            <p>+1 (555) 987-6543</p>
+            <p>+94 41 22 72 556</p>
+            <p>+94 77 86 82 365</p>
           </div>
 
           <div className="info-card">
@@ -60,8 +60,8 @@ const Contact = () => {
               </svg>
             </div>
             <h3>Visit Us</h3>
-            <p>123 Fashion Street</p>
-            <p>Style City, SC 12345</p>
+            <p>Onero fashion house</p>
+            <p>Main street,urubokka</p>
           </div>
 
           <div className="info-card social-card">
