@@ -1,3 +1,4 @@
+import { useRef, useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
 import { Link } from 'react-router-dom';
@@ -7,9 +8,42 @@ const Payment = () => {
   const { cart, getCartTotal, clearCart } = useCart();
   const { user } = useAuth();
 
-  const handlePayment = async () => {
-    alert('Payment successful! Thank you for your order.');
-    await clearCart();
+  const [customerName, setCustomerName] = useState('');
+  const [shippingAddress, setShippingAddress] = useState('');
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  const payHereRef = useRef(null);
+
+  useEffect(() => {
+    setTotalAmount(getCartTotal());
+  }, [cart, getCartTotal]);
+
+  const scrollToCheckout = () => {
+    payHereRef.current.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handlePayHere = () => {
+    if (!customerName || !shippingAddress) {
+      alert('Please fill in your name and shipping address.');
+      return;
+    }
+
+    const paymentData = {
+      merchant_id: 1232710, // Replace with your sandbox ID
+      return_url: 'https://yourwebsite.com/payment/success',
+      cancel_url: 'https://yourwebsite.com/payment/cancel',
+      notify_url: ' https://yourwebsite.com/api/orders/notify', // backend endpoint to save order
+      order_id: `order_${Date.now()}`,
+      items: cart.map(item => item.products.name).join(', '),
+      amount: totalAmount,
+      currency: 'LKR',
+      customer_name: customerName,
+      customer_email: user.email || 'demo@example.com',
+      customer_phone: user.phone || '0771234567',
+      shipping_address: shippingAddress
+    };
+
+    window.payhere.open(paymentData);
   };
 
   if (!user) {
@@ -38,81 +72,76 @@ const Payment = () => {
     );
   }
 
-  const total = getCartTotal();
-
   return (
     <div className="payment-page">
       <div className="payment-container">
         <h1>Payment</h1>
 
         <div className="payment-content">
-          <div className="payment-form-section">
+          {/* Payment Form Section */}
+          <div className="payment-form-section" ref={payHereRef}>
             <h2>Payment Information</h2>
             <p className="demo-notice">
-              This is a demo payment page. No actual payment will be processed.
+              This is a sandbox payment page. No real payment will be processed.
             </p>
 
             <form className="payment-form">
               <div className="form-group">
-                <label>Cardholder Name</label>
-                <input type="text" placeholder="John Doe" required />
+                <label>Name</label>
+                <input
+                  type="text"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  placeholder="John Doe"
+                  required
+                />
               </div>
 
               <div className="form-group">
-                <label>Card Number</label>
-                <input type="text" placeholder="1234 5678 9012 3456" required />
-              </div>
-
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Expiry Date</label>
-                  <input type="text" placeholder="MM/YY" required />
-                </div>
-                <div className="form-group">
-                  <label>CVV</label>
-                  <input type="text" placeholder="123" required />
-                </div>
+                <label>Shipping Address</label>
+                <input
+                  type="text"
+                  value={shippingAddress}
+                  onChange={(e) => setShippingAddress(e.target.value)}
+                  placeholder="Street Address"
+                  required
+                />
               </div>
 
               <div className="form-group">
-                <label>Billing Address</label>
-                <input type="text" placeholder="Street Address" required />
+                <label>Items</label>
+                <textarea
+                  value={cart.map(i => `${i.products.name} x${i.quantity} - LKR ${(i.products.price * (1 - i.products.discount_percentage / 100) * i.quantity).toFixed(2)}`).join('\n')}
+                  readOnly
+                />
               </div>
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label>City</label>
-                  <input type="text" placeholder="City" required />
-                </div>
-                <div className="form-group">
-                  <label>ZIP Code</label>
-                  <input type="text" placeholder="12345" required />
-                </div>
+              <div className="form-group">
+                <label>Total Payment (LKR)</label>
+                <input type="number" value={totalAmount} readOnly />
               </div>
 
-              <button type="button" onClick={handlePayment} className="pay-btn">
-                Pay ${total.toFixed(2)}
+              <button type="button" className="pay-btn" onClick={handlePayHere}>
+                Pay LKR {totalAmount.toFixed(2)}
               </button>
             </form>
           </div>
 
+          {/* Order Summary Section */}
           <div className="order-summary-section">
             <h2>Order Summary</h2>
 
             <div className="order-items">
-              {cart.map((item) => {
+              {cart.map(item => {
                 const product = item.products;
                 const discountedPrice = product.price * (1 - product.discount_percentage / 100);
-
                 return (
                   <div key={item.id} className="order-item">
                     <img src={product.image_url} alt={product.name} />
                     <div className="order-item-details">
                       <h4>{product.name}</h4>
                       <p>Qty: {item.quantity}</p>
-                      <p className="item-price">
-                        ${(discountedPrice * item.quantity).toFixed(2)}
-                      </p>
+                      <p className="item-price">LKR {(discountedPrice * item.quantity).toFixed(2)}</p>
                     </div>
                   </div>
                 );
@@ -122,7 +151,7 @@ const Payment = () => {
             <div className="order-total">
               <div className="total-row">
                 <span>Total</span>
-                <span className="total-amount">${total.toFixed(2)}</span>
+                <span className="total-amount">LKR {totalAmount.toFixed(2)}</span>
               </div>
             </div>
 

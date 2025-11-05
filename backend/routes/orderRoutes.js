@@ -21,6 +21,44 @@ router.post('/', async (req, res) => {
   }
 });
 
+// ✅ PayHere sandbox notify route (POST)
+router.post('/notify', async (req, res) => {
+  try {
+    const data = req.body;
+
+    // PayHere status_code 2 = payment successful
+    if (data.status_code == 2) {
+      const itemsArray = data.items.split(', ').map(name => ({
+        name,
+        qty: 1, // adjust if needed
+        price: data.amount // simple example
+      }));
+
+      const newOrder = new Order({
+        user: data.customer_email || "guest",
+        items: itemsArray,
+        shippingAddress: {
+          line1: data.shipping_address,
+          city: data.city || "",
+          state: data.state || "",
+          
+        },
+        totalPrice: data.amount,
+        status: "paid"
+      });
+
+      await newOrder.save();
+      console.log("Order saved via PayHere:", newOrder);
+    }
+
+    // PayHere requires 200 OK response
+    res.status(200).send("OK");
+  } catch (error) {
+    console.error("PayHere notify error:", error);
+    res.status(500).send("Error");
+  }
+});
+
 // ✅ Get all orders (GET)
 router.get('/', async (req, res) => {
   try {
