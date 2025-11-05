@@ -110,7 +110,7 @@ const Login = () => {
 
         <div className="login-image">
           <div className="image-overlay">
-            <h2>Elite Shoe Shop</h2>
+            <h2>Onero Shoe House</h2>
             <p>Your one-stop destination for quality footwear and accessories</p>
           </div>
         </div>
