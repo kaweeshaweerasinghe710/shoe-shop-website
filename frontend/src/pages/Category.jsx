@@ -211,6 +211,14 @@ const Category = () => {
             </div>
           )}
         </div>
+
+        {/* ----- Single Go to Cart button placed under the whole products section ----- */}
+        <div className="go-to-cart-container">
+          <Link to="/cart" className="go-to-cart-btn">
+            {t('cart') || 'Go to Cart'}
+          </Link>
+        </div>
+        {/* ------------------------------------------------------------------------- */}
       </div>
     </div>
   );

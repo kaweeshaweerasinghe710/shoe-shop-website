@@ -295,6 +295,32 @@
   box-shadow: 0 6px 16px rgba(38, 160, 218, 0.3);
 }
 
+.go-to-cart-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 32px 0 10px; /* space under the products */
+  padding: 0 20px;
+}
+
+.go-to-cart-btn {
+  display: inline-block;
+  padding: 1rem 3rem;
+  background:  #1e3c72;
+  color: #eff1f4;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: fadeInUp 1.2s ease;
+}
+
+.go-to-cart-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
 .no-products {
   text-align: center;
   padding: 4rem 2rem;
