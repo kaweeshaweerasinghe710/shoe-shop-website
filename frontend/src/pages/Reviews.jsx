@@ -23,7 +23,7 @@ const Reviews = () => {
   // Fetch reviews from backend
   const loadReviews = async () => {
     try {
-      const response = await fetch('https://your-backend-url.com/api/reviews'); // replace with your backend
+      const response = await fetch('http://localhost:5000/api/review'); // replace with your backend
       const data = await response.json();
       setReviews(data || []);
     } catch (error) {
@@ -34,7 +34,7 @@ const Reviews = () => {
   // Fetch products from backend
   const loadProducts = async () => {
     try {
-      const response = await fetch('https://your-backend-url.com/api/products'); // replace with your backend
+      const response = await fetch('http://localhost:5000/api/product'); // replace with your backend
       const data = await response.json();
       setProducts(data || []);
     } catch (error) {
@@ -52,7 +52,7 @@ const Reviews = () => {
     }
 
     try {
-      const response = await fetch('https://your-backend-url.com/api/reviews', {
+      const response = await fetch('http://localhost:5000/api/review', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

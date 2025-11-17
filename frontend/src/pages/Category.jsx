@@ -25,33 +25,7 @@ const Category = () => {
     applyFilters();
   }, [products, priceRange, selectedBrands]);
 
-  // Fetch single category by slug
-  const loadCategory = async () => {
-    try {
-      const res = await fetch(`https://your-backend-url.com/api/categories/${slug}`);
-      const categoryData = await res.json();
-      setCategory(categoryData);
-
-      if (categoryData) {
-        const productsRes = await fetch(`https://your-backend-url.com/api/products?category_id=${categoryData._id}`);
-        const productsData = await productsRes.json();
-        setProducts(productsData || []);
-      }
-    } catch (error) {
-      console.error('Failed to load category:', error);
-    }
-  };
-
-  // Fetch all categories
-  const loadAllCategories = async () => {
-    try {
-      const res = await fetch('https://your-backend-url.com/api/categories');
-      const data = await res.json();
-      setAllCategories(data || []);
-    } catch (error) {
-      console.error('Failed to load categories:', error);
-    }
-  };
+  
 
   const applyFilters = () => {
     let filtered = [...products];
@@ -215,5 +189,29 @@ const Category = () => {
     </div>
   );
 };
+
+const handleAddToCart = async (productId) => {
+    if (!user) {
+      alert("Please login first");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/cart/add", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userId: user._id,
+          productId: productId,
+        }),
+      });
+
+      const data = await res.json();
+      alert(data.message || "Product added to cart!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add item");
+    }
+  };
 
 export default Category;

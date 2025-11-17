@@ -15,7 +15,7 @@ const Home = () => {
 
   const loadFeaturedProducts = async () => {
   try {
-    const response = await fetch('https://your-backend-url.com/api/products/featured'); // replace with your backend route
+    const response = await fetch('http://localhost:5000/api/product'); // replace with your backend route
     const data = await response.json();
     setFeaturedProducts(data || []);
   } catch (error) {
