@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import './Category.css';
@@ -26,45 +25,40 @@ const Category = () => {
     applyFilters();
   }, [products, priceRange, selectedBrands]);
 
+  // Fetch single category by slug
   const loadCategory = async () => {
-    const { data: categoryData } = await supabase
-      .from('categories')
-      .select('*')
-      .eq('slug', slug)
-      .maybeSingle();
+    try {
+      const res = await fetch(`https://your-backend-url.com/api/categories/${slug}`);
+      const categoryData = await res.json();
+      setCategory(categoryData);
 
-    setCategory(categoryData);
-
-    if (categoryData) {
-      const { data: productsData } = await supabase
-        .from('products')
-        .select('*')
-        .eq('category_id', categoryData.id);
-
-      setProducts(productsData || []);
+      if (categoryData) {
+        const productsRes = await fetch(`https://your-backend-url.com/api/products?category_id=${categoryData._id}`);
+        const productsData = await productsRes.json();
+        setProducts(productsData || []);
+      }
+    } catch (error) {
+      console.error('Failed to load category:', error);
     }
   };
 
+  // Fetch all categories
   const loadAllCategories = async () => {
-    const { data } = await supabase
-      .from('categories')
-      .select('*')
-      .order('name');
-
-    setAllCategories(data || []);
+    try {
+      const res = await fetch('https://your-backend-url.com/api/categories');
+      const data = await res.json();
+      setAllCategories(data || []);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+    }
   };
 
   const applyFilters = () => {
     let filtered = [...products];
-
-    filtered = filtered.filter(
-      (p) => p.price >= priceRange[0] && p.price <= priceRange[1]
-    );
-
+    filtered = filtered.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
     if (selectedBrands.length > 0) {
       filtered = filtered.filter((p) => selectedBrands.includes(p.brand));
     }
-
     setFilteredProducts(filtered);
   };
 
@@ -91,7 +85,7 @@ const Category = () => {
         <div className="category-tabs">
           {allCategories.map((cat) => (
             <Link
-              key={cat.id}
+              key={cat._id || cat.id}
               to={`/category/${cat.slug}`}
               className={`category-tab ${cat.slug === slug ? 'active' : ''}`}
             >
@@ -171,7 +165,7 @@ const Category = () => {
 
           <div className="products-grid">
             {filteredProducts.map((product) => (
-              <div key={product.id} className="product-card">
+              <div key={product._id || product.id} className="product-card">
                 {product.discount_percentage > 0 && (
                   <span className="discount-badge">-{product.discount_percentage}%</span>
                 )}
@@ -195,7 +189,7 @@ const Category = () => {
                     )}
                   </div>
                   <button
-                    onClick={() => handleAddToCart(product.id)}
+                    onClick={() => handleAddToCart(product._id || product.id)}
                     className="add-to-cart-btn"
                   >
                     {t('addToCart')}
@@ -212,13 +206,11 @@ const Category = () => {
           )}
         </div>
 
-        {/* ----- Single Go to Cart button placed under the whole products section ----- */}
         <div className="go-to-cart-container">
           <Link to="/cart" className="go-to-cart-btn">
             {t('cart') || 'Go to Cart'}
           </Link>
         </div>
-        {/* ------------------------------------------------------------------------- */}
       </div>
     </div>
   );

@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
 import './Home.css';
@@ -15,14 +14,15 @@ const Home = () => {
   }, []);
 
   const loadFeaturedProducts = async () => {
-    const { data } = await supabase
-      .from('products')
-      .select('*')
-      .eq('is_featured', true)
-      .limit(6);
-
+  try {
+    const response = await fetch('https://your-backend-url.com/api/products/featured'); // replace with your backend route
+    const data = await response.json();
     setFeaturedProducts(data || []);
-  };
+  } catch (error) {
+    console.error('Failed to load featured products:', error);
+  }
+};
+
 
   const handleAddToCart = async (productId) => {
     await addToCart(productId);

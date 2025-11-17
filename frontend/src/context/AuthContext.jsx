@@ -1,79 +1,81 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { createContext, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext({});
-
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null); // stores logged-in user info
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        loadProfile(session.user.id);
-      }
-      setLoading(false);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      (async () => {
-        setUser(session?.user ?? null);
-        if (session?.user) {
-          await loadProfile(session.user.id);
-        } else {
-          setProfile(null);
-        }
-      })();
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
-  const loadProfile = async (userId) => {
-    const { data } = await supabase
-      .from('user_profiles')
-      .select('*')
-      .eq('id', userId)
-      .maybeSingle();
-
-    setProfile(data);
-  };
-
-  const signUp = async (email, password, name) => {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (!error && data.user) {
-      await supabase.from('user_profiles').insert({
-        id: data.user.id,
-        email,
-        name,
-      });
-    }
-
-    return { data, error };
-  };
-
+  // Login function
   const signIn = async (email, password) => {
-    return await supabase.auth.signInWithPassword({ email, password });
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/login', { // your backend login route
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        alert(data.error);
+        return false;
+      }
+
+      // Store user info in state
+      setUser({ email, role: data.role });
+
+      // Redirect based on role
+      if (data.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+
+      return true;
+    } catch (err) {
+      alert('Failed to fetch backend');
+      return false;
+    }
   };
 
-  const signOut = async () => {
-    return await supabase.auth.signOut();
+  // Signup function
+  const signUp = async (name, email, password) => {
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/register', { // your backend register route
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password }),
+      });
+
+      const data = await res.json();
+
+      if (data.error) {
+        alert(data.error);
+        return false;
+      }
+
+      alert('Registration successful! Please login.');
+      navigate('/login');
+      return true;
+    } catch (err) {
+      alert('Failed to fetch backend');
+      return false;
+    }
+  };
+
+  // Logout function
+  const signOut = () => {
+    setUser(null);
+    navigate('/login');
   };
 
   const value = {
     user,
-    profile,
-    loading,
-    signUp,
     signIn,
+    signUp,
     signOut,
   };
 

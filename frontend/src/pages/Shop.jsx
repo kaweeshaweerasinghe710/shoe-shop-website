@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
 import { useLanguage } from '../context/LanguageContext';
 import './Shop.css';
 
@@ -13,13 +12,15 @@ const Shop = () => {
     loadCategories();
   }, []);
 
+  // Fetch categories from your backend
   const loadCategories = async () => {
-    const { data } = await supabase
-      .from('categories')
-      .select('*')
-      .order('name');
-
-    setCategories(data || []);
+    try {
+      const res = await fetch('https://your-backend-url.com/api/categories');
+      const data = await res.json();
+      setCategories(data || []);
+    } catch (error) {
+      console.error('Failed to load categories:', error);
+    }
   };
 
   const filteredCategories = categories.filter(category =>
@@ -50,7 +51,7 @@ const Shop = () => {
       <div className="categories-grid">
         {filteredCategories.map((category) => (
           <Link
-            key={category.id}
+            key={category._id || category.id}
             to={`/category/${category.slug}`}
             className="category-card"
           >
