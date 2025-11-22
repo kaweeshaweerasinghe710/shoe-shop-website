@@ -11,14 +11,37 @@ const Contact = () => {
     message: '',
   });
   const [submitted, setSubmitted] = useState(false);
+const [error, setError] = useState(''); // For handling errors
 
-  const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setFormData({ name: '', email: '', subject: '', message: '' });
-      setSubmitted(false);
-    }, 3000);
+    setError('');
+
+     try {
+      // Send data to backend
+      const response = await fetch('http://localhost:5000/api/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert('Your message has been sent successfully!'); // Alert for success
+        setSubmitted(true);
+        setTimeout(() => {
+          setFormData({ name: '', email: '', subject: '', message: '' });
+          setSubmitted(false);
+        }, 1000);
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Something went wrong');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Failed to send message. Please try again later.');
+    }
   };
 
   return (

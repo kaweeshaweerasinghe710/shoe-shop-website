@@ -6,26 +6,33 @@ import './Shop.css';
 const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
   const { t } = useLanguage();
 
   useEffect(() => {
     loadCategories();
   }, []);
 
-  // Fetch categories from your backend
   const loadCategories = async () => {
     try {
-      const res = await fetch('https://your-backend-url.com/api/categories');
+      setLoading(true);
+      const res = await fetch('http://localhost:5000/api/categories'); // your backend URL
+      if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
       setCategories(data || []);
+      setLoading(false);
     } catch (error) {
       console.error('Failed to load categories:', error);
+      setCategories([]);
+      setLoading(false);
     }
   };
 
   const filteredCategories = categories.filter(category =>
     category.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (loading) return <p>Loading categories...</p>;
 
   return (
     <div className="shop-page">
@@ -49,14 +56,15 @@ const Shop = () => {
       </div>
 
       <div className="categories-grid">
+        {filteredCategories.length === 0 && <p>No categories found.</p>}
         {filteredCategories.map((category) => (
           <Link
-            key={category._id || category.id}
-            to={`/category/${category.slug}`}
+            key={category._id}
+            to={`/category/${category._id}`} // use _id as unique URL
             className="category-card"
           >
             <div className="category-image">
-              <img src={category.image_url} alt={category.name} />
+              <img src={category.image} alt={category.name} /> {/* use 'image' field */}
               <div className="category-overlay">
                 <h2>{category.name}</h2>
                 <span className="shop-now-text">Shop Now →</span>
@@ -68,5 +76,18 @@ const Shop = () => {
     </div>
   );
 };
+
+const loadCategories = async () => {
+  try {
+    const res = await fetch('http://localhost:5000/api/categories');
+    if (!res.ok) throw new Error('Failed to fetch');
+    const data = await res.json();
+    console.log('Categories from backend:', data); // <-- check this
+    setCategories(data || []);
+  } catch (error) {
+    console.error('Failed to load categories:', error);
+  }
+};
+
 
 export default Shop;

@@ -4,8 +4,15 @@ require('dotenv').config(); // must be first so process.env is populated
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
-
 const app = express();
+const cors = require('cors');
+
+app.use(cors({
+  origin: 'http://localhost:5176' // replace with your frontend URL
+}));
+app.use(express.json()); // parse JSON
+
+
 const PORT = process.env.PORT || 5000;
 
 // Middleware
