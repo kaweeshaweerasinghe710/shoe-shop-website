@@ -2,14 +2,18 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 
-// Get all products
-// GET all products (with optional filter)
+// Get products by category with optional price filter
 router.get('/', async (req, res) => {
   try {
-    const { category, minPrice, maxPrice } = req.query;
+    const { category, minPrice, maxPrice } = req.query; // category slug + price range
     const query = {};
 
-    if (category) query.category = category;
+    // Filter by category if provided
+    if (category) {
+      query.category = { $regex: new RegExp(`^${category}$`, 'i') }; // case-insensitive
+    } 
+
+    // Filter by price range if provided
     if (minPrice || maxPrice) {
       query.price = {};
       if (minPrice) query.price.$gte = Number(minPrice);
@@ -23,6 +27,9 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch products' });
   }
 });
+
+
+
 
 // Add a product
 router.post('/', async (req, res) => {

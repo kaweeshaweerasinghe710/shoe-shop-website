@@ -25,41 +25,64 @@ const Category = () => {
     applyFilters();
   }, [products, priceRange, selectedBrands]);
 
-  
+  // Fetch products for the selected category
+  const loadCategory = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/products?category=${slug}`);
+      const data = await res.json();
+      setProducts(data);
+      setCategory({ name: slug });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Fetch all categories from products
+  const loadAllCategories = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/products");
+      const data = await res.json();
+      const categories = [...new Set(data.map(p => p.category))].map(name => ({ name, slug: name }));
+      setAllCategories(categories);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const applyFilters = () => {
     let filtered = [...products];
-    filtered = filtered.filter((p) => p.price >= priceRange[0] && p.price <= priceRange[1]);
+    filtered = filtered.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
     if (selectedBrands.length > 0) {
-      filtered = filtered.filter((p) => selectedBrands.includes(p.brand));
+      filtered = filtered.filter(p => selectedBrands.includes(p.brand));
     }
     setFilteredProducts(filtered);
   };
 
-  const brands = [...new Set(products.map((p) => p.brand))];
+  const brands = [...new Set(products.map(p => p.brand))];
 
   const toggleBrand = (brand) => {
     if (selectedBrands.includes(brand)) {
-      setSelectedBrands(selectedBrands.filter((b) => b !== brand));
+      setSelectedBrands(selectedBrands.filter(b => b !== brand));
     } else {
       setSelectedBrands([...selectedBrands, brand]);
     }
   };
 
-  const handleAddToCart = async (productId) => {
+  const handleAddToCartClick = async (productId) => {
     await addToCart(productId);
     alert('Product added to cart!');
   };
 
-  if (!category) return <div className="loading">Loading...</div>;
+  if (!category) return <div className="loading">loading..</div>;
 
   return (
     <div className="category-page">
+      {/* Category Navigation */}
       <div className="category-nav">
         <div className="category-tabs">
-          {allCategories.map((cat) => (
+          {allCategories.map(cat => (
             <Link
-              key={cat._id || cat.id}
+              key={cat.slug}
               to={`/category/${cat.slug}`}
               className={`category-tab ${cat.slug === slug ? 'active' : ''}`}
             >
@@ -69,6 +92,7 @@ const Category = () => {
         </div>
       </div>
 
+      {/* Category Header */}
       <div className="category-header">
         <h1>{category.name}</h1>
         <button
@@ -76,12 +100,13 @@ const Category = () => {
           onClick={() => setShowFilters(!showFilters)}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M4 6H20M4 12H20M4 18H20" strokeWidth="2"/>
+            <path d="M4 6H20M4 12H20M4 18H20" strokeWidth="2" />
           </svg>
           {t('filterBy')}
         </button>
       </div>
 
+      {/* Category Content */}
       <div className="category-content">
         {showFilters && (
           <div className="filters-sidebar">
@@ -107,7 +132,7 @@ const Category = () => {
             <div className="filter-section">
               <h3>{t('brands')}</h3>
               <div className="brand-filters">
-                {brands.map((brand) => (
+                {brands.map(brand => (
                   <label key={brand} className="checkbox-label">
                     <input
                       type="checkbox"
@@ -132,23 +157,24 @@ const Category = () => {
           </div>
         )}
 
+        {/* Products Section */}
         <div className="products-section">
           <p className="results-count">
             {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found
           </p>
 
           <div className="products-grid">
-            {filteredProducts.map((product) => (
-              <div key={product._id || product.id} className="product-card">
+            {filteredProducts.map(product => (
+              <div key={product._id} className="product-card">
                 {product.discount_percentage > 0 && (
                   <span className="discount-badge">-{product.discount_percentage}%</span>
                 )}
                 <div className="product-image">
-                  <img src={product.image_url} alt={product.name} />
+                  <img src={product.image} alt={product.name} />
                 </div>
                 <div className="product-info">
                   <h3>{product.name}</h3>
-                  <p className="product-brand">{product.brand}</p>
+                  {product.brand && <p className="product-brand">{product.brand}</p>}
                   <p className="product-description">{product.description}</p>
                   <div className="product-pricing">
                     {product.discount_percentage > 0 ? (
@@ -163,7 +189,7 @@ const Category = () => {
                     )}
                   </div>
                   <button
-                    onClick={() => handleAddToCart(product._id || product.id)}
+                    onClick={() => handleAddToCartClick(product._id)}
                     className="add-to-cart-btn"
                   >
                     {t('addToCart')}
@@ -189,29 +215,5 @@ const Category = () => {
     </div>
   );
 };
-
-const handleAddToCart = async (productId) => {
-    if (!user) {
-      alert("Please login first");
-      return;
-    }
-
-    try {
-      const res = await fetch("http://localhost:5000/api/cart/add", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user._id,
-          productId: productId,
-        }),
-      });
-
-      const data = await res.json();
-      alert(data.message || "Product added to cart!");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to add item");
-    }
-  };
 
 export default Category;
