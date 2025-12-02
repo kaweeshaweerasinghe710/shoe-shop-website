@@ -6,13 +6,10 @@ import './Login.css';
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-  });
-  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
   const { signIn, signUp } = useAuth();
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -24,18 +21,16 @@ const Login = () => {
 
     try {
       if (isSignUp) {
-        const { error } = await signUp(formData.email, formData.password, formData.name);
-        if (error) throw error;
-        alert('Account created successfully! Please sign in.');
-        setIsSignUp(false);
-        setFormData({ name: '', email: '', password: '' });
+        const success = await signUp(formData.name, formData.email, formData.password);
+        if (success) {
+          setIsSignUp(false);
+          setFormData({ name: '', email: '', password: '' });
+        }
       } else {
-        const { error } = await signIn(formData.email, formData.password);
-        if (error) throw error;
-        navigate('/');
+        await signIn(formData.email, formData.password);
       }
-    } catch (error) {
-      setError(error.message || 'An error occurred');
+    } catch (err) {
+      setError(err.message || 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -45,14 +40,7 @@ const Login = () => {
     <div className="login-page">
       <div className="login-container">
         <div className="login-card">
-          <div className="login-header">
-            <h1>{isSignUp ? t('signUp') : t('signIn')}</h1>
-            <p>
-              {isSignUp
-                ? 'Create an account to start shopping'
-                : 'Welcome back! Please login to your account'}
-            </p>
-          </div>
+          <h1>{isSignUp ? t('signUp') : t('signIn')}</h1>
 
           {error && <div className="error-message">{error}</div>}
 
@@ -89,11 +77,10 @@ const Login = () => {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
                 placeholder="Enter your password"
-                minLength="6"
               />
             </div>
 
-            <button type="submit" className="submit-btn" disabled={loading}>
+            <button type="submit" disabled={loading} className="submit-btn">
               {loading ? 'Please wait...' : isSignUp ? t('signUp') : t('signIn')}
             </button>
           </form>
@@ -105,13 +92,6 @@ const Login = () => {
                 {isSignUp ? t('signIn') : t('signUp')}
               </button>
             </p>
-          </div>
-        </div>
-
-        <div className="login-image">
-          <div className="image-overlay">
-            <h2>Onero Shoe House</h2>
-            <p>Your one-stop destination for quality footwear and accessories</p>
           </div>
         </div>
       </div>

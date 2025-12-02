@@ -4,80 +4,87 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext({});
 export const useAuth = () => useContext(AuthContext);
 
+const BACKEND_URL = "http://localhost:5000/api/users"; // adjust if needed
+
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // stores logged-in user info
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('user');
+    return saved ? JSON.parse(saved) : null;
+  });
+
   const navigate = useNavigate();
 
-  // Login function
+  // LOGIN
   const signIn = async (email, password) => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/login', { // your backend login route
+      const res = await fetch(`http://localhost:5000/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
 
-      const data = await res.json();
+      let data;
 
-      if (data.error) {
-        alert(data.error);
-        return false;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error('Invalid response from server');
       }
 
-      // Store user info in state
-      setUser({ email, role: data.role });
+      if (!res.ok) throw new Error(data.error || 'Login failed');
 
-      // Redirect based on role
-      if (data.role === 'admin') {
-        navigate('/admin');
+      setUser(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      if (data.user.role === 'manager') {
+        navigate('/admin-dashboard');
       } else {
         navigate('/');
       }
 
       return true;
     } catch (err) {
-      alert('Failed to fetch backend');
+      alert(err.message);
       return false;
     }
   };
 
-  // Signup function
+  // SIGNUP (customer only)
   const signUp = async (name, email, password) => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/register', { // your backend register route
+      const res = await fetch(`http://localhost:5000/api/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
       });
 
-      const data = await res.json();
-
-      if (data.error) {
-        alert(data.error);
-        return false;
+      let data;
+      try {
+        data = await res.json();
+      } catch {
+        throw new Error('Invalid response from server');
       }
 
-      alert('Registration successful! Please login.');
-      navigate('/login');
+      if (!res.ok) throw new Error(data.error || 'Signup failed');
+
+      alert('Account created! Please login.');
       return true;
     } catch (err) {
-      alert('Failed to fetch backend');
+      alert(err.message);
       return false;
     }
   };
 
-  // Logout function
+  // LOGOUT
   const signOut = () => {
     setUser(null);
+    localStorage.removeItem('user');
     navigate('/login');
   };
 
-  const value = {
-    user,
-    signIn,
-    signUp,
-    signOut,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ user, signIn, signUp, signOut }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

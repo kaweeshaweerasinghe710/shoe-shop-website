@@ -2,48 +2,97 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 
-// POST /api/users/login  → create or login user
-router.post('/login', async (req, res) => {
+// =========================
+// REGISTER (SIGNUP)
+// =========================
+router.post('/register', async (req, res) => {
   try {
-    const { email, role } = req.body;
-    if (!email) return res.status(400).json({ message: 'Email required' });
+    const { name, email, password } = req.body;
 
-    let user = await User.findOne({ email });
-    if (!user) {
-      user = new User({ email, role: role || 'user' });
-      await user.save();
-      return res.status(201).json({ message: 'User created', user });
+    if (!email || !password) {
+      return res.status(400).json({ error: "Email and password required" });
     }
 
-    res.json({ message: 'Login successful', user });
+    // Check if email already exists
+    let existing = await User.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ error: "Email already registered" });
+    }
+
+    // Create new user
+    const user = new User({
+      email,
+      password,
+      role: "user",   // signup always creates normal user
+      name: name || ""
+    });
+
+    await user.save();
+    res.json({ message: "Registration successful", user });
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// GET /api/users  → get all users
+// =========================
+// LOGIN
+// =========================
+router.post('/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check user exists
+    const user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ error: "User not found" });
+
+    // Validate password
+    if (user.password !== password) {
+      return res.status(400).json({ error: "Incorrect password" });
+    }
+
+    res.json({
+      message: "Login successful",
+      role: user.role,
+      user
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// =========================
+// GET ALL USERS
+// =========================
 router.get('/', async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
-// PUT /api/users/:id  → update user role
+// =========================
+// UPDATE USER ROLE (ADMIN ONLY)
+// =========================
 router.put('/:id', async (req, res) => {
   try {
     const { role } = req.body;
+
     const updated = await User.findByIdAndUpdate(
       req.params.id,
       { role },
       { new: true }
     );
-    if (!updated) return res.status(404).json({ message: 'User not found' });
-    res.json({ message: 'User updated', updated });
+
+    if (!updated) return res.status(404).json({ error: "User not found" });
+
+    res.json({ message: "Role updated successfully", updated });
+
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({ error: err.message });
   }
 });
 
