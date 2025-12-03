@@ -14,13 +14,16 @@ const Payment = () => {
 
   const payHereRef = useRef(null);
 
+  // Calculate total amount including discounts
   useEffect(() => {
-    setTotalAmount(getCartTotal());
-  }, [cart, getCartTotal]);
-
-  const scrollToCheckout = () => {
-    payHereRef.current.scrollIntoView({ behavior: 'smooth' });
-  };
+    const total = cart.reduce((acc, item) => {
+      const product = item.products;
+      if (!product) return acc; // skip if product is null
+      const discountedPrice = product.price * (1 - (product.discount || 0) / 100);
+      return acc + discountedPrice * item.quantity;
+    }, 0);
+    setTotalAmount(total);
+  }, [cart]);
 
   const handlePayHere = () => {
     if (!customerName || !shippingAddress) {
@@ -32,9 +35,12 @@ const Payment = () => {
       merchant_id: 1232710, // Replace with your sandbox ID
       return_url: 'https://yourwebsite.com/payment/success',
       cancel_url: 'https://yourwebsite.com/payment/cancel',
-      notify_url: ' https://yourwebsite.com/api/orders/notify', // backend endpoint to save order
+      notify_url: 'https://yourwebsite.com/api/orders/notify',
       order_id: `order_${Date.now()}`,
-      items: cart.map(item => item.products.name).join(', '),
+      items: cart
+        .filter(item => item.products)
+        .map(item => item.products.name)
+        .join(', '),
       amount: totalAmount,
       currency: 'LKR',
       customer_name: customerName,
@@ -78,6 +84,7 @@ const Payment = () => {
         <h1>Payment</h1>
 
         <div className="payment-content">
+
           {/* Payment Form Section */}
           <div className="payment-form-section" ref={payHereRef}>
             <h2>Payment Information</h2>
@@ -111,17 +118,31 @@ const Payment = () => {
               <div className="form-group">
                 <label>Items</label>
                 <textarea
-                  value={cart.map(i => `${i.products.name} x${i.quantity} - LKR ${(i.products.price * (1 - i.products.discount_percentage / 100) * i.quantity).toFixed(2)}`).join('\n')}
+                  value={cart
+                    .filter(item => item.products)
+                    .map(
+                      item =>
+                        `${item.products.name} x${item.quantity} - LKR ${(
+                          item.products.price *
+                          (1 - (item.products.discount || 0) / 100) *
+                          item.quantity
+                        ).toFixed(2)}`
+                    )
+                    .join('\n')}
                   readOnly
                 />
               </div>
 
               <div className="form-group">
                 <label>Total Payment (LKR)</label>
-                <input type="number" value={totalAmount} readOnly />
+                <input type="number" value={totalAmount.toFixed(2)} readOnly />
               </div>
 
-              <button type="button" className="pay-btn" onClick={handlePayHere}>
+              <button
+                type="button"
+                className="pay-btn"
+                onClick={handlePayHere}
+              >
                 Pay LKR {totalAmount.toFixed(2)}
               </button>
             </form>
@@ -134,14 +155,18 @@ const Payment = () => {
             <div className="order-items">
               {cart.map(item => {
                 const product = item.products;
-                const discountedPrice = product.price * (1 - product.discount_percentage / 100);
+                if (!product) return null; // skip null products
+                const discountedPrice = product.price * (1 - (product.discount || 0) / 100);
+
                 return (
-                  <div key={item.id} className="order-item">
-                    <img src={product.image_url} alt={product.name} />
+                  <div key={product._id} className="order-item">
+                    <img src={product.image} alt={product.name} />
                     <div className="order-item-details">
                       <h4>{product.name}</h4>
                       <p>Qty: {item.quantity}</p>
-                      <p className="item-price">LKR {(discountedPrice * item.quantity).toFixed(2)}</p>
+                      <p className="item-price">
+                        LKR {(discountedPrice * item.quantity).toFixed(2)}
+                      </p>
                     </div>
                   </div>
                 );
@@ -155,6 +180,7 @@ const Payment = () => {
               </div>
             </div>
 
+            {/* Optional: security badges */}
             <div className="security-badges">
               <div className="badge">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -170,6 +196,7 @@ const Payment = () => {
                 <span>Money-back Guarantee</span>
               </div>
             </div>
+
           </div>
         </div>
       </div>
