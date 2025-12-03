@@ -10,21 +10,26 @@ const Home = () => {
   const { t } = useLanguage();
 
   useEffect(() => {
-    loadFeaturedProducts();
-  }, []);
+  loadFeaturedProducts();
+}, []);
 
-  const loadFeaturedProducts = async () => {
+const loadFeaturedProducts = async () => {
   try {
-    const response = await fetch('http://localhost:5000/api/product'); // replace with your backend route
+    const response = await fetch('http://localhost:5000/api/products');
     const data = await response.json();
-    setFeaturedProducts(data || []);
+
+    // ✅ Filter only discounted products and take first 3
+    const discountedItems = data
+      .filter(item => item.discount > 0) // only items with discount
+      .slice(0, 3); 
+
+    setFeaturedProducts(discountedItems);
   } catch (error) {
     console.error('Failed to load featured products:', error);
   }
 };
-
-
-  const handleAddToCart = async (productId) => {
+            
+  const handleAddToCart = async (productId,quantity) => {
     await addToCart(productId);
     alert('Product added to cart!');
   };
@@ -68,8 +73,8 @@ const Home = () => {
         <div className="products-grid">
           {featuredProducts.map((product) => (
             <div key={product.id} className="product-card">
-              {product.discount_percentage > 0 && (
-                <span className="discount-badge">-{product.discount_percentage}%</span>
+              {product.discount > 0 && (
+                <span className="discount-badge">-{product.discount}%</span>
               )}
               <div className="product-image">
                 <img src={product.image_url} alt={product.name} />
@@ -78,19 +83,20 @@ const Home = () => {
                 <h3>{product.name}</h3>
                 <p className="product-brand">{product.brand}</p>
                 <div className="product-pricing">
-                  {product.discount_percentage > 0 ? (
+                  {product.discount > 0 ? (
                     <>
                       <span className="original-price">${product.price}</span>
                       <span className="discounted-price">
-                        ${(product.price * (1 - product.discount_percentage / 100)).toFixed(2)}
+                        ${(product.price * (1 - product.discount / 100)).toFixed(2)}
                       </span>
                     </>
                   ) : (
                     <span className="price">${product.price}</span>
                   )}
                 </div>
-                <button
-                  onClick={() => handleAddToCart(product.id)}
+                
+
+                <button onClick={() => handleAddToCart(product._id)}
                   className="add-to-cart-btn"
                 >
                   {t('addToCart')}

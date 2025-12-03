@@ -62,7 +62,7 @@ const Cart = () => {
                       </span>
                     )}
                   </div>
-
+                  
                   <div className="item-pricing">
                     {product.discount > 0 ? (
                       <>
