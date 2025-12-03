@@ -1,116 +1,93 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { useAuth } from './AuthContext';
+import { createContext, useContext, useEffect, useState } from "react";
 
 const CartContext = createContext({});
 export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
-  const { user } = useAuth();
 
-  useEffect(() => {
-    if (user) {
-      loadCart();
-    } else {
-      setCart([]);
-    }
-  }, [user]);
-
-  // Load cart from backend
+  // Load cart
   const loadCart = async () => {
-    if (!user) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/cart/${user.email}`); // backend endpoint
+      const res = await fetch("http://localhost:5000/api/cart");
       const data = await res.json();
-      setCart(data || []);
+      setCart(data.items || []);
     } catch (err) {
-      console.error('Failed to load cart', err);
+      console.error("Failed to load cart", err);
     }
   };
 
+  useEffect(() => {
+    loadCart();
+  }, []);
+
   // Add product to cart
   const addToCart = async (productId) => {
-    if (!user) {
-      alert('Please login to add items to cart');
-      return;
-    }
-
     try {
-      await fetch('http://localhost:5000/api/cart', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email, productId, quantity: 1 }),
+      await fetch("http://localhost:5000/api/cart", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productId, quantity: 1 }),
       });
       await loadCart();
     } catch (err) {
-      console.error('Failed to add to cart', err);
+      console.error("Failed to add to cart", err);
     }
   };
 
   // Update quantity
-  const updateQuantity = async (itemId, quantity) => {
-    if (quantity <= 0) {
-      await removeFromCart(itemId);
-      return;
-    }
-
+  const updateQuantity = async (productId, quantity) => {
     try {
-      await fetch(`http://localhost:5000/api/cart/${itemId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+      await fetch(`http://localhost:5000/api/cart/${productId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity }),
       });
       await loadCart();
     } catch (err) {
-      console.error('Failed to update quantity', err);
+      console.error("Failed to update quantity", err);
     }
   };
 
   // Remove item
-  const removeFromCart = async (itemId) => {
+  const removeFromCart = async (productId) => {
     try {
-      await fetch(`http://localhost:5000/api/cart/${itemId}`, { method: 'DELETE' });
+      await fetch(`http://localhost:5000/api/cart/${productId}`, {
+        method: "DELETE",
+      });
       await loadCart();
     } catch (err) {
-      console.error('Failed to remove item', err);
+      console.error("Failed to remove cart item", err);
     }
   };
 
-  // Clear cart
-  const clearCart = async () => {
-    if (!user) return;
-    try {
-      await fetch(`http://localhost:5000/api/cart/clear/${user.email}`, { method: 'DELETE' });
-      setCart([]);
-    } catch (err) {
-      console.error('Failed to clear cart', err);
-    }
-  };
-
-  // Get total price
+  // Total price
   const getCartTotal = () => {
     return cart.reduce((total, item) => {
-      const price = item.product.price;
-      const discount = item.product.discount_percentage || 0;
-      const discountedPrice = price * (1 - discount / 100);
-      return total + discountedPrice * item.quantity;
+      const price = item.products.price;
+      const discount = item.products.discount || 0;
+      const finalPrice = price;
+      return total + finalPrice * item.quantity;
     }, 0);
   };
 
-  // Get total count
+  // Total items
   const getCartCount = () => {
     return cart.reduce((count, item) => count + item.quantity, 0);
   };
 
-  const value = {
-    cart,
-    addToCart,
-    updateQuantity,
-    removeFromCart,
-    clearCart,
-    getCartTotal,
-    getCartCount,
-  };
-
-  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
+  return (
+    <CartContext.Provider
+      value={{
+        cart,
+        addToCart,
+        updateQuantity,
+        removeFromCart,
+        getCartTotal,
+        getCartCount,
+      }}
+    >
+      {children}
+    </CartContext.Provider>
+  );
 };

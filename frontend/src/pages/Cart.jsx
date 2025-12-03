@@ -1,81 +1,75 @@
-import { Link } from 'react-router-dom';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
-import { useLanguage } from '../context/LanguageContext';
-import './Cart.css';
+import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
+import "./Cart.css";
 
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, getCartTotal } = useCart();
-  const { user } = useAuth();
-  const { t } = useLanguage();
 
-  if (!user) {
+  // Filter out items with null products
+  const validCartItems = cart.filter((item) => item.products);
+
+  if (validCartItems.length === 0) {
     return (
       <div className="cart-page">
         <div className="empty-cart">
-          <h2>Please login to view your cart</h2>
-          <Link to="/login" className="login-link">Go to Login</Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (cart.length === 0) {
-    return (
-      <div className="cart-page">
-        <div className="empty-cart">
-          <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path d="M9 2L6 6H3L4 20H20L21 6H18L15 2H9Z" strokeWidth="2"/>
-          </svg>
           <h2>Your cart is empty</h2>
-          <p>Add some products to get started</p>
-          <Link to="/shop" className="shop-link">Start Shopping</Link>
+          <Link to="/shop" className="shop-link">
+            Start Shopping
+          </Link>
         </div>
       </div>
     );
   }
 
-  const subtotal = cart.reduce((total, item) => {
+  // Calculate totals
+  const subtotal = validCartItems.reduce((total, item) => {
     return total + item.products.price * item.quantity;
   }, 0);
 
-  const totalDiscount = cart.reduce((total, item) => {
-    const discount = (item.products.price * item.products.discount_percentage / 100) * item.quantity;
-    return total + discount;
+  const totalDiscount = validCartItems.reduce((total, item) => {
+    const discount = (item.products.price * (item.products.discount || 0)) / 100;
+    return total + discount * item.quantity;
   }, 0);
 
-  const total = getCartTotal();
+  const total = subtotal - totalDiscount;
 
   return (
     <div className="cart-page">
       <div className="cart-container">
-        <h1>{t('cart')}</h1>
+        <h1>My Cart</h1>
 
         <div className="cart-content">
+          {/* Cart Items */}
           <div className="cart-items">
-            {cart.map((item) => {
+            {validCartItems.map((item) => {
               const product = item.products;
-              const discountedPrice = product.price * (1 - product.discount_percentage / 100);
+              const discountedPrice =
+                product.price * (1 - (product.discount|| 0) / 100);
+                
 
               return (
-                <div key={item.id} className="cart-item">
+                <div key={product._id} className="cart-item">
                   <div className="item-image">
-                    <img src={product.image_url} alt={product.name} />
+                    <img src={product.image} alt={product.name} />
                   </div>
 
                   <div className="item-details">
                     <h3>{product.name}</h3>
-                    <p className="item-brand">{product.brand}</p>
-                    {product.discount_percentage > 0 && (
-                      <span className="discount-tag">-{product.discount_percentage}% OFF</span>
+                    {product.brand && <p className="item-brand">{product.brand}</p>}
+                    {product.discount > 0 && (
+                      <span className="discount-tag">
+                        -{product.discount}% OFF
+                      </span>
                     )}
                   </div>
 
                   <div className="item-pricing">
-                    {product.discount_percentage > 0 ? (
+                    {product.discount > 0 ? (
                       <>
                         <span className="original-price">${product.price}</span>
-                        <span className="discounted-price">${discountedPrice.toFixed(2)}</span>
+                        <span className="discounted-price">
+                          {product.discount}%
+                        </span>
                       </>
                     ) : (
                       <span className="price">${product.price}</span>
@@ -84,15 +78,17 @@ const Cart = () => {
 
                   <div className="item-quantity">
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="qty-btn"
+                      onClick={() =>
+                        updateQuantity(product._id, item.quantity - 1)
+                      }
                     >
                       -
                     </button>
                     <span className="qty-value">{item.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="qty-btn"
+                      onClick={() =>
+                        updateQuantity(product._id, item.quantity + 1)
+                      }
                     >
                       +
                     </button>
@@ -103,30 +99,28 @@ const Cart = () => {
                   </div>
 
                   <button
-                    onClick={() => removeFromCart(item.id)}
+                    onClick={() => removeFromCart(product._id)}
                     className="remove-btn"
-                    title="Remove item"
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path d="M18 6L6 18M6 6L18 18" strokeWidth="2"/>
-                    </svg>
+                    Remove
                   </button>
                 </div>
               );
             })}
           </div>
 
+          {/* Cart Summary */}
           <div className="cart-summary">
             <h2>Order Summary</h2>
 
             <div className="summary-row">
-              <span>{t('subtotal')}</span>
+              <span>Subtotal</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
 
             {totalDiscount > 0 && (
               <div className="summary-row discount-row">
-                <span>{t('discount')}</span>
+                <span>Discount</span>
                 <span>-${totalDiscount.toFixed(2)}</span>
               </div>
             )}
@@ -134,12 +128,13 @@ const Cart = () => {
             <div className="summary-divider"></div>
 
             <div className="summary-row total-row">
-              <span>{t('total')}</span>
+              <span>Total</span>
               <span>${total.toFixed(2)}</span>
             </div>
 
+            {/* Checkout button */}
             <Link to="/payment" className="checkout-btn">
-              {t('checkout')}
+              Checkout
             </Link>
 
             <Link to="/shop" className="continue-shopping">

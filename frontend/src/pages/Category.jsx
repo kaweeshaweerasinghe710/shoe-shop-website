@@ -166,8 +166,8 @@ const Category = () => {
           <div className="products-grid">
             {filteredProducts.map(product => (
               <div key={product._id} className="product-card">
-                {product.discount_percentage > 0 && (
-                  <span className="discount-badge">-{product.discount_percentage}%</span>
+                {product.discount > 0 && (
+                  <span className="discount-badge">-{product.discount}%</span>
                 )}
                 <div className="product-image">
                   <img src={product.image} alt={product.name} />
@@ -177,11 +177,11 @@ const Category = () => {
                   {product.brand && <p className="product-brand">{product.brand}</p>}
                   <p className="product-description">{product.description}</p>
                   <div className="product-pricing">
-                    {product.discount_percentage > 0 ? (
+                    {product.discount > 0 ? (
                       <>
                         <span className="original-price">${product.price}</span>
                         <span className="discounted-price">
-                          ${(product.price * (1 - product.discount_percentage / 100)).toFixed(2)}
+                          ${(product.price * (1 - product.discount / 100)).toFixed(2)}
                         </span>
                       </>
                     ) : (

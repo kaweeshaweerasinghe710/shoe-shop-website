@@ -4,11 +4,11 @@ import Modal from '../components/Modal';
 
 function Products() {
   const [products, setProducts] = useState([
-    { id: 1, name: 'Wireless Headphones', price: 79.99, stock: 45, category: 'Electronics', image: '/placeholder.jpg' },
-    { id: 2, name: 'Running Shoes', price: 129.99, stock: 23, category: 'Sports', image: '/placeholder.jpg' },
-    { id: 3, name: 'Coffee Maker', price: 89.99, stock: 15, category: 'Home', image: '/placeholder.jpg' },
-    { id: 4, name: 'Laptop Stand', price: 49.99, stock: 67, category: 'Electronics', image: '/placeholder.jpg' },
-    { id: 5, name: 'Yoga Mat', price: 29.99, stock: 100, category: 'Sports', image: '/placeholder.jpg' },
+    { id: 1, name: 'Wireless Headphones', price: 79.99, stock: 45, category: 'Electronics', image: '/placeholder.jpg', discount: 0 },
+    { id: 2, name: 'Running Shoes', price: 129.99, stock: 23, category: 'Sports', image: '/placeholder.jpg', discount: 0 },
+    { id: 3, name: 'Coffee Maker', price: 89.99, stock: 15, category: 'Home', image: '/placeholder.jpg', discount: 0 },
+    { id: 4, name: 'Laptop Stand', price: 49.99, stock: 67, category: 'Electronics', image: '/placeholder.jpg', discount: 0 },
+    { id: 5, name: 'Yoga Mat', price: 29.99, stock: 100, category: 'Sports', image: '/placeholder.jpg', discount: 0 },
   ]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,11 +19,12 @@ function Products() {
     price: '',
     stock: '',
     category: '',
+    discount: 0,
   });
 
   const handleAddProduct = () => {
     setEditingProduct(null);
-    setFormData({ name: '', description: '', price: '', stock: '', category: '' });
+    setFormData({ name: '', description: '', price: '', stock: '', category: '', discount: 0 });
     setIsModalOpen(true);
   };
 
@@ -35,6 +36,7 @@ function Products() {
       price: product.price,
       stock: product.stock,
       category: product.category,
+      discount: product.discount || 0,
     });
     setIsModalOpen(true);
   };
@@ -47,16 +49,24 @@ function Products() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const updatedProduct = {
+      ...formData,
+      price: parseFloat(formData.price),
+      stock: parseInt(formData.stock),
+      discount: parseFloat(formData.discount) || 0,
+    };
+
     if (editingProduct) {
-      setProducts(products.map((p) => (p.id === editingProduct.id ? { ...p, ...formData } : p)));
+      setProducts(products.map((p) => (p.id === editingProduct.id ? { ...p, ...updatedProduct } : p)));
     } else {
       const newProduct = {
         id: products.length + 1,
-        ...formData,
+        ...updatedProduct,
         image: '/placeholder.jpg',
       };
       setProducts([...products, newProduct]);
     }
+
     setIsModalOpen(false);
   };
 
@@ -77,6 +87,7 @@ function Products() {
               <th>Image</th>
               <th>Name</th>
               <th>Price</th>
+              <th>Discount (%)</th>
               <th>Stock</th>
               <th>Category</th>
               <th>Actions</th>
@@ -91,7 +102,8 @@ function Products() {
                   </div>
                 </td>
                 <td>{product.name}</td>
-                <td>${product.price}</td>
+                <td>${product.price.toFixed(2)}</td>
+                <td>{product.discount}%</td>
                 <td>{product.stock}</td>
                 <td>{product.category}</td>
                 <td>
@@ -110,7 +122,11 @@ function Products() {
         </table>
       </div>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingProduct ? 'Edit Product' : 'Add Product'}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={editingProduct ? 'Edit Product' : 'Add Product'}
+      >
         <form onSubmit={handleSubmit} className="form">
           <div className="form-group">
             <label>Product Name</label>
@@ -137,6 +153,15 @@ function Products() {
               value={formData.price}
               onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               required
+            />
+          </div>
+          <div className="form-group">
+            <label>Discount (%)</label>
+            <input
+              type="number"
+              step="0.01"
+              value={formData.discount}
+              onChange={(e) => setFormData({ ...formData, discount: e.target.value })}
             />
           </div>
           <div className="form-group">

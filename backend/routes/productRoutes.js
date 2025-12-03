@@ -33,9 +33,9 @@ router.get('/', async (req, res) => {
 
 // Add a product
 router.post('/', async (req, res) => {
-  const { name, description, price, countInStock, image, category } = req.body;
+  const { name, description, price, discount, countInStock, image, category } = req.body;
   try {
-    const newProduct = new Product({ name, description, price, countInStock, image, category });
+    const newProduct = new Product({ name, description, price,discount, countInStock, image, category });
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (err) {
