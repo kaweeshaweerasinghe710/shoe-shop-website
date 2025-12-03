@@ -1,4 +1,5 @@
 import { useLanguage } from '../context/LanguageContext';
+import SriLankaMap from "../assets/img.jpg";
 import './About.css';
 
 const About = () => {
@@ -7,6 +8,7 @@ const About = () => {
   return (
     <div className="about-page">
       <div className="about-hero">
+        
         <h1>{t('aboutUs')}</h1>
         <p>Your trusted partner in fashion and quality</p>
       </div>
@@ -75,6 +77,20 @@ const About = () => {
             </div>
           </div>
         </section>
+
+        <section className="about-section location">
+          <h1 className="followers-title">Our Followers from variouds Locations<p className="followers-msg">Thank you for choosing  as your trusted source for
+            high-end shoes & accesories in Sri Lanka. Join us on this journey as we continue
+            to redefine the way you shop for footwear, one pair of sneakers at a time.
+          </p> </h1>
+          
+          <div className="about-image">
+            <img src={SriLankaMap} alt="Sri Lanka Map" />
+          </div>
+
+        </section>
+        
+
 
         <section className="about-section">
           <h2>Visit Our Store</h2>

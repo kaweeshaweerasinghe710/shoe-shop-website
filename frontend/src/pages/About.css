@@ -3,10 +3,13 @@
 }
 
 .about-hero {
-  background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%),
-              url('https://images.pexels.com/photos/1152077/pexels-photo-1152077.jpeg');
+  height: 40vh;
+  width:auto;
+  background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 20%, rgba(106, 107, 109, 0.95) 100%),
+              url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ3BQsQTpdfZhAs1BbnCkWTw9Fme1QfFKJktw&s');
+              
   background-size: cover;
-  background-position: center;
+  background-position: left;
   padding: 6rem 2rem;
   text-align: center;
   color: #ffffff;
@@ -50,7 +53,7 @@
 
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(4, 1fr); 
   gap: 2rem;
   margin-top: 2rem;
 }
@@ -93,6 +96,41 @@
   color: #666;
   line-height: 1.6;
   margin: 0;
+}
+
+.about-section.location {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  padding: 40px 20px;
+}
+
+/* TITLE (LEFT SIDE) */
+.followers-title {
+  flex: 1;
+  font-size: 32px;
+  font-weight: bold;
+  color: #1e3c72;
+  margin: 0;
+  margin-top: 0px;
+}
+.followers-msg {
+  
+  font-size: 18px;
+  color: #5f5c5c;
+  margin-top: 80px;
+}
+
+/* IMAGE (RIGHT SIDE) */
+.about-image {
+  flex: 0 0 350px; /* image keeps a fixed width */
+}
+
+.about-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
 }
 
 .store-info {
