@@ -17,7 +17,7 @@ const Reviews = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
 
-  // Load reviews + products on page load
+  // Load reviews + products on mount
   useEffect(() => {
     loadReviews();
     loadProducts();
@@ -29,7 +29,7 @@ const Reviews = () => {
       const response = await fetch('http://localhost:5000/api/reviews');
       const data = await response.json();
 
-      setReviews(data.data || []); // backend returns data.data
+      setReviews(data.data || []);
     } catch (error) {
       console.error('Failed to load reviews:', error);
     }
@@ -60,10 +60,10 @@ const Reviews = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          product: formData.product, // must match backend
+          product: formData.product,
           rating: formData.rating,
           comment: formData.comment,
-          user: user._id || null, // optional
+          user: user._id,
         }),
       });
 
@@ -83,9 +83,10 @@ const Reviews = () => {
   return (
     <div className="reviews-page">
       <div className="reviews-container">
+        
         {/* HEADER */}
         <div className="reviews-header">
-          <h1>{t('customerReviews')}</h1>
+          <h1>{t('Share your experience with us...')}</h1>
           <button onClick={() => setShowForm(!showForm)} className="add-review-btn">
             {showForm ? 'Cancel' : t('submitReview')}
           </button>
@@ -159,26 +160,39 @@ const Reviews = () => {
           ) : (
             reviews.map((review) => (
               <div key={review._id} className="review-card">
-                {/* USER + DATE + RATING */}
+
+                {/* USER + DATE + PRODUCT + RATING */}
                 <div className="review-header-section">
+
                   <div>
-                    <h3>User</h3>
+                    <h3>{review.user?.name || "Anonymous User"}</h3>
                     <p className="review-date">
                       {new Date(review.createdAt).toLocaleDateString()}
                     </p>
+
+                    {/* Product Name */}
+                    {review.product?.name && (
+                      <p className="review-product">Product: {review.product.name}</p>
+                    )}
                   </div>
 
+                  {/* Stars */}
                   <div className="review-rating">
                     {[...Array(5)].map((_, i) => (
-                      <span key={i} className={`star ${i < review.rating ? 'filled' : ''}`}>
+                      <span
+                        key={i}
+                        className={`star ${i < review.rating ? 'filled' : ''}`}
+                      >
                         ★
                       </span>
                     ))}
                   </div>
+
                 </div>
 
                 {/* COMMENT */}
                 <p className="review-comment">{review.comment}</p>
+
               </div>
             ))
           )}

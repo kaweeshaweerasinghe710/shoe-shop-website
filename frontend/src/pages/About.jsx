@@ -9,7 +9,7 @@ const About = () => {
     <div className="about-page">
       <div className="about-hero">
         
-        <h1>{t('aboutUs')}</h1>
+        <h1>{t('Onero Fashion House')}</h1>
         <p>Your trusted partner in fashion and quality</p>
       </div>
 

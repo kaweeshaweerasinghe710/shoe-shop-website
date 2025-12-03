@@ -47,7 +47,6 @@ const [error, setError] = useState(''); // For handling errors
   return (
     <div className="contact-page">
       <div className="contact-hero">
-        <h1>{t('contactUs')}</h1>
         <p>We'd love to hear from you. Get in touch with us!</p>
       </div>
 
