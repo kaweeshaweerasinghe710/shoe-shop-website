@@ -59,7 +59,7 @@ const loadFeaturedProducts = async () => {
         </div>
         <div className="offer-card">
           <h3>Free Shipping</h3>
-          <p>Orders Over $50</p>
+          <p>Orders Over Rs.5000</p>
           <span className="offer-tag">Worldwide</span>
         </div>
       </section>
@@ -67,7 +67,7 @@ const loadFeaturedProducts = async () => {
       <section className="featured-section">
         <div className="section-header">
           <h2>{t('featuredProducts')}</h2>
-          <p>Handpicked items just for you</p>
+          <p>Hand picked items just for you</p>
         </div>
 
         <div className="products-grid">
@@ -77,7 +77,7 @@ const loadFeaturedProducts = async () => {
                 <span className="discount-badge">-{product.discount}%</span>
               )}
               <div className="product-image">
-                <img src={product.image_url} alt={product.name} />
+                <img src={product.image} alt={product.name} />
               </div>
               <div className="product-info">
                 <h3>{product.name}</h3>
@@ -85,13 +85,13 @@ const loadFeaturedProducts = async () => {
                 <div className="product-pricing">
                   {product.discount > 0 ? (
                     <>
-                      <span className="original-price">${product.price}</span>
+                      <span className="original-price">Rs.{product.price}</span>
                       <span className="discounted-price">
-                        ${(product.price * (1 - product.discount / 100)).toFixed(2)}
+                        Rs.{(product.price * (1 - product.discount / 100)).toFixed(2)}
                       </span>
                     </>
                   ) : (
-                    <span className="price">${product.price}</span>
+                    <span className="price">Rs.{product.price}</span>
                   )}
                 </div>
                 

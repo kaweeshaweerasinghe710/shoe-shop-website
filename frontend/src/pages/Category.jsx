@@ -11,7 +11,7 @@ const Category = () => {
   const [allCategories, setAllCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+  const [priceRange, setPriceRange] = useState([0, 5000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const { addToCart } = useCart();
   const { t } = useLanguage();
@@ -115,41 +115,26 @@ const Category = () => {
               <div className="price-inputs">
                 <input
                   type="number"
-                  value={priceRange[0]}
-                  onChange={(e) => setPriceRange([+e.target.value, priceRange[1]])}
+                  value={priceRange["0"]}
+                  onChange={(e) => setPriceRange([+e.target.value, priceRange[0]])}
                   placeholder="Min"
                 />
                 <span>-</span>
                 <input
                   type="number"
-                  value={priceRange[1]}
+                  value={priceRange["1"]}
                   onChange={(e) => setPriceRange([priceRange[0], +e.target.value])}
                   placeholder="Max"
                 />
               </div>
             </div>
 
-            <div className="filter-section">
-              <h3>{t('brands')}</h3>
-              <div className="brand-filters">
-                {brands.map(brand => (
-                  <label key={brand} className="checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={selectedBrands.includes(brand)}
-                      onChange={() => toggleBrand(brand)}
-                    />
-                    <span>{brand}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
+            
 
             <button
               className="reset-filters"
               onClick={() => {
-                setPriceRange([0, 1000]);
-                setSelectedBrands([]);
+                setPriceRange([0, 5000]);
               }}
             >
               Reset Filters
@@ -179,13 +164,13 @@ const Category = () => {
                   <div className="product-pricing">
                     {product.discount > 0 ? (
                       <>
-                        <span className="original-price">${product.price}</span>
+                        <span className="original-price">Rs.{product.price}</span>
                         <span className="discounted-price">
-                          ${(product.price * (1 - product.discount / 100)).toFixed(2)}
+                          Rs.{(product.price * (1 - product.discount / 100)).toFixed(2)}
                         </span>
                       </>
                     ) : (
-                      <span className="price">${product.price}</span>
+                      <span className="price">Rs.{product.price}</span>
                     )}
                   </div>
                   <button

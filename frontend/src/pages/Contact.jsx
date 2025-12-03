@@ -28,12 +28,19 @@ const [error, setError] = useState(''); // For handling errors
       });
 
       if (response.ok) {
-        alert('Your message has been sent successfully!'); // Alert for success
-        setSubmitted(true);
-        setTimeout(() => {
-          setFormData({ name: '', email: '', subject: '', message: '' });
-          setSubmitted(false);
-        }, 1000);
+      setSubmitted(true); // show success message
+      {submitted && (
+  <div className="success-message">
+    Thank you for your message! We'll get back to you soon.
+  </div>
+)}
+
+
+      // Reset form after 1 seconds
+      setTimeout(() => {
+        setFormData({ name: '', email: '', subject: '', message: '' });
+        setSubmitted(false);
+      }, 1000);
       } else {
         const data = await response.json();
         setError(data.error || 'Something went wrong');
@@ -120,6 +127,7 @@ const [error, setError] = useState(''); // For handling errors
               Thank you for your message! We'll get back to you soon.
             </div>
           )}
+          
           <form onSubmit={handleSubmit} className="contact-form">
             <div className="form-row">
               <div className="form-group">
