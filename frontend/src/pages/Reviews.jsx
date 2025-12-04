@@ -17,6 +17,9 @@ const Reviews = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+const itemsPerView = 3; // 3 on desktop, adjust based on screen size
+
   // Load reviews + products on mount
   useEffect(() => {
     loadReviews();
@@ -152,51 +155,64 @@ const Reviews = () => {
         )}
 
         {/* REVIEW LIST */}
-        <div className="reviews-list">
-          {reviews.length === 0 ? (
-            <div className="no-reviews">
-              <p>No reviews yet. Be the first to share your experience!</p>
-            </div>
-          ) : (
-            reviews.map((review) => (
-              <div key={review._id} className="review-card">
-
-                {/* USER + DATE + PRODUCT + RATING */}
-                <div className="review-header-section">
-
-                  <div>
-                    <h3>{review.user?.name || "Anonymous User"}</h3>
-                    <p className="review-date">
-                      {new Date(review.createdAt).toLocaleDateString()}
-                    </p>
-
-                    {/* Product Name */}
-                    {review.product?.name && (
-                      <p className="review-product">Product: {review.product.name}</p>
-                    )}
-                  </div>
-
-                  {/* Stars */}
-                  <div className="review-rating">
-                    {[...Array(5)].map((_, i) => (
-                      <span
-                        key={i}
-                        className={`star ${i < review.rating ? 'filled' : ''}`}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-
-                </div>
-
-                {/* COMMENT */}
-                <p className="review-comment">{review.comment}</p>
-
-              </div>
-            ))
-          )}
+        {/* REVIEW CAROUSEL */}
+<div className="reviews-list">
+  <div 
+    className="carousel-track"
+    style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+  >
+    {reviews.map((review) => (
+      <div key={review._id} className="review-card">
+        <div className="review-header-section">
+          <div className="user-avatar">
+            {review.user?.name?.charAt(0) || "A"}
+          </div>
+          <div className="review-info">
+            <h3>{review.user?.name || "Anonymous User"}</h3>
+            <p className="review-date">
+              {new Date(review.createdAt).toLocaleDateString()}
+            </p>
+          </div>
         </div>
+
+        <div className="review-rating">
+          {[...Array(5)].map((_, i) => (
+            <span key={i} className={`star ${i < review.rating ? 'filled' : ''}`}>
+              ★
+            </span>
+          ))}
+        </div>
+
+        {review.product?.name && (
+          <div className="review-product">Product: {review.product.name}</div>
+        )}
+
+        <p className="review-comment">{review.comment}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+{/* CAROUSEL CONTROLS */}
+<div className="carousel-controls">
+  <button className="control-btn" onClick={() => setCurrentSlide(Math.max(0, currentSlide - 1))}>
+    ‹
+  </button>
+  <button className="control-btn" onClick={() => setCurrentSlide(Math.min(Math.ceil(reviews.length / itemsPerView) - 1, currentSlide + 1))}>
+    ›
+  </button>
+</div>
+
+{/* CAROUSEL DOTS */}
+<div className="carousel-dots">
+  {Array(Math.ceil(reviews.length / itemsPerView)).fill(0).map((_, i) => (
+    <button 
+      key={i} 
+      className={`dot ${i === currentSlide ? 'active' : ''}`}
+      onClick={() => setCurrentSlide(i)}
+    />
+  ))}
+</div>
       </div>
     </div>
   );

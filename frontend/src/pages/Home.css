@@ -3,14 +3,16 @@
 }
 
 .hero {
-  background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 0%, rgba(42, 82, 152, 0.95) 100%),
-              url('https://images.pexels.com/photos/1598508/pexels-photo-1598508.jpeg');
+  min-height: 60vh;
+  background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 30%, rgba(149, 152, 159, 0.65) 100%),
+              url('http://localhost:5174/src/assets/home.jpg');
   background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
+  background-position: left 62%;
+  background-attachment: fixed;   
   padding: 8rem 2rem;
   text-align: center;
   color: #ffffff;
+  opacity: 0.95;
 }
 
 .hero-content h1 {

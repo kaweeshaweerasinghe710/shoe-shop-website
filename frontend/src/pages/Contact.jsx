@@ -40,7 +40,7 @@ const [error, setError] = useState(''); // For handling errors
       setTimeout(() => {
         setFormData({ name: '', email: '', subject: '', message: '' });
         setSubmitted(false);
-      }, 1000);
+      }, 2000);
       } else {
         const data = await response.json();
         setError(data.error || 'Something went wrong');
@@ -118,7 +118,9 @@ const [error, setError] = useState(''); // For handling errors
               </a>
             </div>
           </div>
+          
         </div>
+        
 
         <div className="contact-form-section">
           <h2>Send Us a Message</h2>
@@ -176,7 +178,7 @@ const [error, setError] = useState(''); // For handling errors
           </form>
         </div>
       </div>
-    </div>
+   </div>
   );
 };
 
