@@ -1,63 +1,112 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
-import Modal from '../components/Modal';
+import './Categories.css';
+
+const API_URL = 'http://localhost:5000/api/categories'; // Update with your backend URL
+
+function Modal({ isOpen, onClose, title, children }) {
+  if (!isOpen) return null;
+  
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2 className="modal-title">{title}</h2>
+        {children}
+      </div>
+    </div>
+  );
+}
 
 function Categories() {
-  const [categories, setCategories] = useState([
-    { id: 1, name: 'Electronics', description: 'Electronic devices and accessories', image: '/placeholder.jpg' },
-    { id: 2, name: 'Sports', description: 'Sports equipment and gear', image: '/placeholder.jpg' },
-    { id: 3, name: 'Home', description: 'Home appliances and decor', image: '/placeholder.jpg' },
-    { id: 4, name: 'Fashion', description: 'Clothing and accessories', image: '/placeholder.jpg' },
-  ]);
-
+  const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
-  const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-  });
+  const [formData, setFormData] = useState({ name: '', description: '', image: '' });
+  const [loading, setLoading] = useState(false);
 
-  const handleAddCategory = () => {
+  // Fetch categories
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      setCategories(data);
+    } catch (err) {
+      alert('Error fetching categories');
+    }
+  };
+
+  // Add or Update category
+  const handleSubmit = async () => {
+    if (!formData.name || !formData.description || !formData.image) {
+      alert('All fields are required');
+      return;
+    }
+    
+    setLoading(true);
+    
+    try {
+      const method = editingCategory ? 'PUT' : 'POST';
+      const url = editingCategory ? `${API_URL}/${editingCategory._id}` : API_URL;
+      
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      
+      if (res.ok) {
+        fetchCategories();
+        setIsModalOpen(false);
+        setFormData({ name: '', description: '', image: '' });
+      } else {
+        alert('Error saving category');
+      }
+    } catch (err) {
+      alert('Error saving category');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Delete category
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this category?')) return;
+    
+    try {
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        fetchCategories();
+      } else {
+        alert('Error deleting category');
+      }
+    } catch (err) {
+      alert('Error deleting category');
+    }
+  };
+
+  // Open modal for adding
+  const handleAdd = () => {
     setEditingCategory(null);
-    setFormData({ name: '', description: '' });
+    setFormData({ name: '', description: '', image: '' });
     setIsModalOpen(true);
   };
 
-  const handleEditCategory = (category) => {
+  // Open modal for editing
+  const handleEdit = (category) => {
     setEditingCategory(category);
-    setFormData({
-      name: category.name,
-      description: category.description,
-    });
+    setFormData({ name: category.name, description: category.description, image: category.image });
     setIsModalOpen(true);
-  };
-
-  const handleDeleteCategory = (id) => {
-    if (window.confirm('Are you sure you want to delete this category?')) {
-      setCategories(categories.filter((c) => c.id !== id));
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (editingCategory) {
-      setCategories(categories.map((c) => (c.id === editingCategory.id ? { ...c, ...formData } : c)));
-    } else {
-      const newCategory = {
-        id: categories.length + 1,
-        ...formData,
-        image: '/placeholder.jpg',
-      };
-      setCategories([...categories, newCategory]);
-    }
-    setIsModalOpen(false);
   };
 
   return (
     <div className="categories-page">
       <div className="page-header">
         <h1 className="page-title">Categories</h1>
-        <button className="btn btn-primary" onClick={handleAddCategory}>
+        <button onClick={handleAdd} className="btn btn-primary">
           <Plus size={20} />
           Add Category
         </button>
@@ -65,17 +114,17 @@ function Categories() {
 
       <div className="categories-grid">
         {categories.map((category) => (
-          <div key={category.id} className="category-card">
-            <div className="category-image-placeholder"></div>
+          <div key={category._id} className="category-card">
+            <img src={category.image} alt={category.name} className="category-image" />
             <div className="category-info">
               <h3>{category.name}</h3>
               <p>{category.description}</p>
             </div>
             <div className="category-actions">
-              <button className="btn-icon btn-edit" onClick={() => handleEditCategory(category)}>
+              <button onClick={() => handleEdit(category)} className="btn-icon btn-edit">
                 <Edit2 size={18} />
               </button>
-              <button className="btn-icon btn-delete" onClick={() => handleDeleteCategory(category.id)}>
+              <button onClick={() => handleDelete(category._id)} className="btn-icon btn-delete">
                 <Trash2 size={18} />
               </button>
             </div>
@@ -84,38 +133,44 @@ function Categories() {
       </div>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingCategory ? 'Edit Category' : 'Add Category'}>
-        <form onSubmit={handleSubmit} className="form">
+        <div className="form">
           <div className="form-group">
-            <label>Category Name</label>
+            <label>Name</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
             />
           </div>
+          
           <div className="form-group">
             <label>Description</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows="3"
-              required
             />
           </div>
+          
           <div className="form-group">
-            <label>Category Photo</label>
-            <input type="file" accept="image/*" />
+            <label>Image URL</label>
+            <input
+              type="text"
+              value={formData.image}
+              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+              placeholder="data:image/jpeg;base64,... or https://..."
+            />
           </div>
+          
           <div className="form-actions">
-            <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>
+            <button onClick={() => setIsModalOpen(false)} className="btn btn-secondary">
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
-              {editingCategory ? 'Update' : 'Add'} Category
+            <button onClick={handleSubmit} disabled={loading} className="btn btn-primary">
+              {loading ? 'Saving...' : editingCategory ? 'Update' : 'Add'}
             </button>
           </div>
-        </form>
+        </div>
       </Modal>
     </div>
   );

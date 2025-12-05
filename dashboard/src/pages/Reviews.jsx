@@ -1,65 +1,70 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Trash2, Star } from 'lucide-react';
 
 function Reviews() {
-  const [reviews, setReviews] = useState([
-    {
-      id: 1,
-      userName: 'John Doe',
-      product: 'Wireless Headphones',
-      rating: 5,
-      comment: 'Excellent product! Great sound quality and comfortable to wear.',
-      date: '2024-01-15',
-    },
-    {
-      id: 2,
-      userName: 'Jane Smith',
-      product: 'Running Shoes',
-      rating: 4,
-      comment: 'Good quality shoes, but took a while to break in.',
-      date: '2024-01-14',
-    },
-    {
-      id: 3,
-      userName: 'Bob Wilson',
-      product: 'Coffee Maker',
-      rating: 5,
-      comment: 'Makes perfect coffee every time. Highly recommended!',
-      date: '2024-01-13',
-    },
-    {
-      id: 4,
-      userName: 'Alice Brown',
-      product: 'Laptop Stand',
-      rating: 3,
-      comment: 'Decent stand but a bit wobbly.',
-      date: '2024-01-12',
-    },
-    {
-      id: 5,
-      userName: 'Charlie Davis',
-      product: 'Yoga Mat',
-      rating: 5,
-      comment: 'Very comfortable and non-slip. Perfect for yoga practice.',
-      date: '2024-01-11',
-    },
-  ]);
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleDeleteReview = (id) => {
-    if (window.confirm('Are you sure you want to delete this review?')) {
-      setReviews(reviews.filter((r) => r.id !== id));
+  // -----------------------------
+  // Fetch Reviews from Backend
+  // -----------------------------
+  const loadReviews = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/reviews");
+      const data = await res.json();
+
+      if (Array.isArray(data.data)) {
+        setReviews(data.data);
+      }
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const renderStars = (rating) => {
-    return (
-      <div className="star-rating">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star key={star} size={16} fill={star <= rating ? '#f59e0b' : 'none'} color="#f59e0b" />
-        ))}
-      </div>
-    );
+  useEffect(() => {
+    loadReviews();
+  }, []);
+
+  // -----------------------------
+  // Delete Review
+  // -----------------------------
+  const handleDeleteReview = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this review?")) return;
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/reviews/${id}`, {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        setReviews((prev) => prev.filter((r) => r._id !== id));
+      } else {
+        alert("Failed to delete review");
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
   };
+
+  // -----------------------------
+  // Stars Renderer
+  // -----------------------------
+  const renderStars = (rating) => (
+    <div className="star-rating">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <Star
+          key={star}
+          size={16}
+          fill={star <= rating ? '#f59e0b' : 'none'}
+          color="#f59e0b"
+        />
+      ))}
+    </div>
+  );
+
+  if (loading) return <p>Loading reviews...</p>;
 
   return (
     <div className="reviews-page">
@@ -72,29 +77,38 @@ function Reviews() {
           <thead>
             <tr>
               <th>User Name</th>
-              <th>Product</th>
               <th>Rating</th>
               <th>Comment</th>
               <th>Date</th>
               <th>Actions</th>
             </tr>
           </thead>
+
           <tbody>
-            {reviews.map((review) => (
-              <tr key={review.id}>
-                <td>{review.userName}</td>
-                <td>{review.product}</td>
-                <td>{renderStars(review.rating)}</td>
-                <td className="review-comment">{review.comment}</td>
-                <td>{review.date}</td>
-                <td>
-                  <button className="btn-icon btn-delete" onClick={() => handleDeleteReview(review.id)}>
-                    <Trash2 size={18} />
-                  </button>
-                </td>
+            {reviews.length === 0 ? (
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center" }}>No reviews found</td>
               </tr>
-            ))}
+            ) : (
+              reviews.map((review) => (
+                <tr key={review._id}>
+                  <td>{review.user?.name || "Unknown User"}</td>
+                  <td>{renderStars(review.rating)}</td>
+                  <td className="review-comment">{review.comment}</td>
+                  <td>{new Date(review.createdAt).toLocaleDateString()}</td>
+                  <td>
+                    <button
+                      className="btn-icon btn-delete"
+                      onClick={() => handleDeleteReview(review._id)}
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
+
         </table>
       </div>
     </div>

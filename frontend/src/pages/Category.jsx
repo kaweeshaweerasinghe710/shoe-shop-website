@@ -70,7 +70,6 @@ const Category = () => {
 
   const handleAddToCartClick = async (productId) => {
     await addToCart(productId);
-    alert('Product added to cart!');
   };
 
   if (!category) return <div className="loading">loading..</div>;

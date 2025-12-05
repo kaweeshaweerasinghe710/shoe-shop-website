@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
 
       if (!res.ok) throw new Error(data.error || 'Signup failed');
 
-      alert('Account created! Please login.');
+      
       return true;
     } catch (err) {
       alert(err.message);
