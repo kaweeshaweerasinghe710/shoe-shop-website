@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Package, Folder, ShoppingCart, Star, Users, Tag, Settings } from 'lucide-react';
+import { Home, Package, Folder, ShoppingCart, Star, Users, Tag, Settings, MessageSquare } from 'lucide-react';
 
 function Sidebar({ isOpen, toggleSidebar }) {
   const location = useLocation();
@@ -10,6 +10,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
     { path: '/categories', label: 'Categories', icon: Folder },
     { path: '/orders', label: 'Orders', icon: ShoppingCart },
     { path: '/reviews', label: 'Reviews', icon: Star },
+    { path: '/messages', label: 'Messages', icon: MessageSquare },
     { path: '/roles', label: 'Roles', icon: Users },
     { path: '/offers', label: 'Offers', icon: Tag },
     { path: '/settings', label: 'Settings', icon: Settings },

@@ -1,26 +1,70 @@
+import { useState, useEffect } from 'react';
 import { Package, ShoppingCart, Star, Users } from 'lucide-react';
 
 function Dashboard() {
-  const stats = [
-    { label: 'Total Products', value: '1,234', icon: Package, color: '#3b82f6' },
-    { label: 'Total Orders', value: '856', icon: ShoppingCart, color: '#10b981' },
-    { label: 'Total Reviews', value: '432', icon: Star, color: '#f59e0b' },
-    { label: 'Total Users', value: '2,145', icon: Users, color: '#8b5cf6' },
+  const [stats, setStats] = useState({
+    products: 0,
+    orders: 0,
+    reviews: 0,
+    users: 0
+  });
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      // Fetch all counts
+      const [productsRes, ordersRes, reviewsRes, usersRes, recentOrdersRes] = await Promise.all([
+        fetch('http://localhost:5000/api/products'),
+        fetch('http://localhost:5000/api/orders'),
+        fetch('http://localhost:5000/api/reviews'),
+        fetch('http://localhost:5000/api/users'),
+        fetch('http://localhost:5000/api/orders')
+      ]);
+
+      const products = await productsRes.json();
+      const orders = await ordersRes.json();
+      const reviews = await reviewsRes.json();
+      const users = await usersRes.json();
+      const allOrders = await recentOrdersRes.json();
+
+      setStats({
+        products: Array.isArray(products) ? products.length : 0,
+        orders: Array.isArray(orders) ? orders.length : 0,
+        reviews: reviews.total || 0, // Use total from the response object
+        users: Array.isArray(users) ? users.length : 0
+      });
+
+      // Get last 5 orders
+      setRecentOrders(Array.isArray(allOrders) ? allOrders.slice(0, 5) : []);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching dashboard data:', error);
+      setLoading(false);
+    }
+  };
+
+  const statsData = [
+    { label: 'Total Products', value: stats.products || 0, icon: Package, color: '#3b82f6' },
+    { label: 'Total Orders', value: stats.orders || 0, icon: ShoppingCart, color: '#10b981' },
+    { label: 'Total Reviews', value: stats.reviews || 0, icon: Star, color: '#f59e0b' },
+    { label: 'Total Users', value: stats.users || 0, icon: Users, color: '#8b5cf6' },
   ];
 
-  const recentOrders = [
-    { id: '#ORD-001', customer: 'John Doe', amount: '$125.99', status: 'Completed', date: '2024-01-15' },
-    { id: '#ORD-002', customer: 'Jane Smith', amount: '$89.50', status: 'Processing', date: '2024-01-15' },
-    { id: '#ORD-003', customer: 'Bob Wilson', amount: '$234.00', status: 'Pending', date: '2024-01-14' },
-    { id: '#ORD-004', customer: 'Alice Brown', amount: '$156.75', status: 'Completed', date: '2024-01-14' },
-  ];
+  if (loading) {
+    return <div className="loading">Loading dashboard...</div>;
+  }
 
   return (
     <div className="dashboard">
       <h1 className="page-title">Dashboard Overview</h1>
 
       <div className="stats-grid">
-        {stats.map((stat, index) => {
+        {statsData.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <div key={index} className="stat-card">
@@ -29,7 +73,7 @@ function Dashboard() {
               </div>
               <div className="stat-details">
                 <p className="stat-label">{stat.label}</p>
-                <h3 className="stat-value">{stat.value}</h3>
+                <h3 className="stat-value">{stat.value.toLocaleString()}</h3>
               </div>
             </div>
           );
@@ -43,24 +87,24 @@ function Dashboard() {
             <thead>
               <tr>
                 <th>Order ID</th>
-                <th>Customer</th>
+                <th>User</th>
                 <th>Amount</th>
-                <th>Status</th>
+                <th>Action</th>
                 <th>Date</th>
               </tr>
             </thead>
             <tbody>
               {recentOrders.map((order) => (
-                <tr key={order.id}>
-                  <td>{order.id}</td>
-                  <td>{order.customer}</td>
-                  <td>{order.amount}</td>
+                <tr key={order._id}>
+                  <td>#{order._id.slice(-6)}</td>
+                  <td>{order.user}</td>
+                  <td>${order.totalPrice.toFixed(2)}</td>
                   <td>
-                    <span className={`status-badge status-${order.status.toLowerCase()}`}>
+                    <span className={`status-badge status-${order.action}`}>
                       {order.status}
                     </span>
                   </td>
-                  <td>{order.date}</td>
+                  <td>{new Date(order.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>

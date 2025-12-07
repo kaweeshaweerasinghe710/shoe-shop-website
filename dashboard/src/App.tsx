@@ -7,6 +7,7 @@ import Products from './pages/Products';
 import Categories from './pages/Categories';
 import Orders from './pages/Orders';
 import Reviews from './pages/Reviews';
+import Messages from './pages/Messages';
 import Roles from './pages/Roles';
 import Offers from './pages/Offers';
 import Settings from './pages/Settings';
@@ -32,6 +33,7 @@ function App() {
               <Route path="/categories" element={<Categories />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/reviews" element={<Reviews />} />
+              <Route path="/messages" element={<Messages />} />
               <Route path="/roles" element={<Roles />} />
               <Route path="/offers" element={<Offers />} />
               <Route path="/settings" element={<Settings />} />

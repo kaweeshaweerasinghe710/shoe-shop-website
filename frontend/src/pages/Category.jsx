@@ -11,7 +11,7 @@ const Category = () => {
   const [allCategories, setAllCategories] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [showFilters, setShowFilters] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 5000]);
+  const [priceRange, setPriceRange] = useState([0, 10000]);
   const [selectedBrands, setSelectedBrands] = useState([]);
   const { addToCart } = useCart();
   const { t } = useLanguage();
