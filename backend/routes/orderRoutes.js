@@ -6,13 +6,19 @@ const Order = require('../models/Order');
 // ✅ Create a new order (POST)
 router.post('/', async (req, res) => {
   try {
-    const { user, items, totalPrice } = req.body;
+    const { user, items, shippingAddress, totalPrice } = req.body;
 
     if (!user || !items || items.length === 0) {
       return res.status(400).json({ message: 'user and items are required' });
     }
 
-    const order = new Order({ user, items, totalPrice });
+    const order = new Order({ 
+      user, 
+      items, 
+      shippingAddress,
+      totalPrice 
+    });
+    
     const savedOrder = await order.save();
     res.status(201).json(savedOrder);
   } catch (err) {
@@ -30,18 +36,20 @@ router.post('/notify', async (req, res) => {
     if (data.status_code == 2) {
       const itemsArray = data.items.split(', ').map(name => ({
         name,
-        qty: 1, // adjust if needed
-        price: data.amount // simple example
+        qty: 1,
+        price: data.amount
       }));
 
       const newOrder = new Order({
         user: data.customer_email || "guest",
         items: itemsArray,
         shippingAddress: {
-          line1: data.shipping_address,
+          line1: data.address || data.shipping_address || "",
+          line2: data.address2 || "",
           city: data.city || "",
           state: data.state || "",
-          
+          postalCode: data.zip || data.postal_code || "",
+          country: data.country || "Sri Lanka"
         },
         totalPrice: data.amount,
         status: "paid"
@@ -51,7 +59,6 @@ router.post('/notify', async (req, res) => {
       console.log("Order saved via PayHere:", newOrder);
     }
 
-    // PayHere requires 200 OK response
     res.status(200).send("OK");
   } catch (error) {
     console.error("PayHere notify error:", error);
