@@ -1,0 +1,162 @@
+/* Roles Page Styles */
+
+.roles-page {
+  padding: 20px;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Current User Display - Top Right Corner */
+.current-user {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.user-email {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.user-role {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Page Header */
+.page-header {
+  margin-bottom: 30px;
+  margin-top: 60px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  color: #333;
+  margin: 0;
+}
+
+/* Table Container */
+.table-container {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+/* Table Styles */
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table thead {
+  background: #f8f9fa;
+}
+
+.users-table th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  color: #555;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.users-table td {
+  padding: 15px;
+  border-top: 1px solid #eee;
+  color: #333;
+}
+
+.users-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+/* Role Badges */
+.role-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+.role-user {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.role-manager {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.role-admin {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* Role Select Dropdown */
+.role-select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.role-select:hover {
+  border-color: #999;
+}
+
+.role-select:focus {
+  border-color: #1976d2;
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-size: 18px;
+  color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .current-user {
+    position: static;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  .page-header {
+    margin-top: 20px;
+  }
+
+  .table-container {
+    overflow-x: auto;
+  }
+
+  .users-table {
+    min-width: 600px;
+  }
+}

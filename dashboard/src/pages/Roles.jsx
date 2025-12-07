@@ -1,54 +1,109 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import './Roles.css';
 
 function Roles() {
-  const [users, setUsers] = useState([
-    { id: 1, email: 'john@example.com', role: 'Admin', orders: 15, reviews: 8 },
-    { id: 2, email: 'jane@example.com', role: 'Customer', orders: 23, reviews: 12 },
-    { id: 3,  email: 'bob@example.com', role: 'Customer', orders: 7, reviews: 3 },
-    { id: 4, email: 'alice@example.com', role: 'Manager', orders: 31, reviews: 18 },
-    { id: 5,  email: 'charlie@example.com', role: 'Customer', orders: 5, reviews: 2 },
-    { id: 6, email: 'eva@example.com', role: 'Customer', orders: 19, reviews: 11 },
-  ]);
+  const [users, setUsers] = useState([]);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleRoleChange = (userId, newRole) => {
-    setUsers(users.map((user) => (user.id === userId ? { ...user, role: newRole } : user)));
+  // Fetch logged-in user info and all users
+  useEffect(() => {
+    fetchCurrentUser();
+    fetchAllUsers();
+  }, []);
+
+  const fetchCurrentUser = () => {
+    // Get logged-in user from localStorage
+    const userData = localStorage.getItem('user');
+    if (userData) {
+      setCurrentUser(JSON.parse(userData));
+    }
   };
+
+  const fetchAllUsers = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/users');
+      const data = await response.json();
+      setUsers(data);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+      setLoading(false);
+    }
+  };
+
+  const handleRoleChange = async (userId, newRole) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ role: newRole }),
+      });
+
+      if (response.ok) {
+        // Update local state
+        setUsers(users.map((user) => 
+          user._id === userId ? { ...user, role: newRole } : user
+        ));
+        alert('Role updated successfully!');
+      }
+    } catch (error) {
+      console.error('Error updating role:', error);
+      alert('Failed to update role');
+    }
+  };
+
+  if (loading) {
+    return <div className="loading">Loading...</div>;
+  }
 
   return (
     <div className="roles-page">
+      {/* Display current admin info at top-right corner */}
+      {currentUser && (
+        <div className="current-user">
+          <span className="user-email">{currentUser.email}</span>
+          <span className={`user-role role-${currentUser.role}`}>
+            {currentUser.role}
+          </span>
+        </div>
+      )}
+
       <div className="page-header">
-        <h1 className="page-title">User Roles</h1>
+        <h1>User Roles Management</h1>
       </div>
 
       <div className="table-container">
-        <table className="data-table">
+        <table className="users-table">
           <thead>
             <tr>
               <th>Email</th>
               <th>Role</th>
-              <th>Number of Orders</th>
-              <th>Number of Reviews</th>
+              
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.id}>
+              <tr key={user._id}>
                 <td>{user.email}</td>
                 <td>
-                  <span className={`role-badge role-${user.role.toLowerCase()}`}>{user.role}</span>
+                  <span className={`role-badge role-${user.role}`}>
+                    {user.role}
+                  </span>
                 </td>
-                <td>{user.orders}</td>
-                <td>{user.reviews}</td>
+                
                 <td>
                   <select
                     className="role-select"
                     value={user.role}
-                    onChange={(e) => handleRoleChange(user.id, e.target.value)}
+                    onChange={(e) => handleRoleChange(user._id, e.target.value)}
                   >
-                    <option value="Customer">Customer</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Admin">Admin</option>
+                    <option value="user">User</option>
+                    <option value="manager">Manager</option>
+                    <option value="admin">Admin</option>
                   </select>
                 </td>
               </tr>

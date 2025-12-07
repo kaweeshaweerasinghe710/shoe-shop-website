@@ -8,8 +8,15 @@ const app = express();
 const cors = require('cors');
 
 app.use(cors({
-  origin: 'http://localhost:5174' // replace with your frontend URL
+  origin:["http://localhost:5173",
+         "http://localhost:5175",
+          "https://shoe-shop-website-94dg.vercel.app/",
+          "https://*.onrender.com" 
+        ] ,
+  credentials: true
 }));
+
+
 app.use(express.json()); // parse JSON
 
 

@@ -36,11 +36,16 @@ export const AuthProvider = ({ children }) => {
       setUser(data.user);
       localStorage.setItem('user', JSON.stringify(data.user));
 
-      if (data.user.role === 'manager') {
-        navigate('/admin-dashboard');
-      } else {
-        navigate('/');
-      }
+      
+// Save user data first
+setUser(data.user);
+localStorage.setItem('user', JSON.stringify(data.user));
+if (data.user.role === 'admin' || data.user.role === 'manager') {
+  window.location.href = `http://localhost:5175?user=${encodeURIComponent(JSON.stringify(data.user))}`;
+} else {
+ 
+  navigate('/');
+}
 
       return true;
     } catch (err) {
