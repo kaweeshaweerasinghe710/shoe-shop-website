@@ -29,7 +29,7 @@ const itemsPerView = 3; // 3 on desktop, adjust based on screen size
   // ⭐ LOAD REVIEWS
   const loadReviews = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/reviews');
+      const response = await fetch('https://shoe-shop-website-gray.vercel.app/api/reviews');
       const data = await response.json();
 
       setReviews(data.data || []);
@@ -41,7 +41,7 @@ const itemsPerView = 3; // 3 on desktop, adjust based on screen size
   // ⭐ LOAD PRODUCTS
   const loadProducts = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/products');
+      const response = await fetch('https://shoe-shop-website-gray.vercel.app/api/products');
       const data = await response.json();
       setProducts(data || []);
     } catch (error) {
@@ -59,7 +59,7 @@ const itemsPerView = 3; // 3 on desktop, adjust based on screen size
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/reviews', {
+      const response = await fetch('https://shoe-shop-website-gray.vercel.app/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

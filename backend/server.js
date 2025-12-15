@@ -8,10 +8,9 @@ const app = express();
 const cors = require('cors');
 
 app.use(cors({
-  origin:["http://localhost:5173",
-         "http://localhost:5175",
-          "https://shoe-shop-website-94dg.vercel.app/",
-          "https://*.onrender.com" 
+  origin:[
+          "https://shoe-shop-website-frontend.vercel.app",
+          "https://shoe-shop-website-gray.vercel.app" 
         ] ,
   credentials: true
 }));
@@ -20,7 +19,7 @@ app.use(cors({
 app.use(express.json()); // parse JSON
 
 
-const PORT = process.env.PORT || 5000;
+
 
 // Middleware
 app.use(express.json()); // parse application/json

@@ -21,14 +21,17 @@ const Category = () => {
     loadAllCategories();
   }, [slug]);
 
+
+
+
   useEffect(() => {
     applyFilters();
-  }, [products, priceRange, selectedBrands]);
+  }, [products, priceRange]);
 
   // Fetch products for the selected category
   const loadCategory = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/api/products?category=${slug}`);
+      const res = await fetch(`https://shoe-shop-website-gray.vercel.app/api/products?category=${slug}`);
       const data = await res.json();
       setProducts(data);
       setCategory({ name: slug });
@@ -40,7 +43,7 @@ const Category = () => {
   // Fetch all categories from products
   const loadAllCategories = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/products");
+      const res = await fetch("https://shoe-shop-website-gray.vercel.app/api/products");
       const data = await res.json();
       const categories = [...new Set(data.map(p => p.category))].map(name => ({ name, slug: name }));
       setAllCategories(categories);
@@ -52,21 +55,13 @@ const Category = () => {
   const applyFilters = () => {
     let filtered = [...products];
     filtered = filtered.filter(p => p.price >= priceRange[0] && p.price <= priceRange[1]);
-    if (selectedBrands.length > 0) {
-      filtered = filtered.filter(p => selectedBrands.includes(p.brand));
-    }
+   
     setFilteredProducts(filtered);
   };
 
   const brands = [...new Set(products.map(p => p.brand))];
 
-  const toggleBrand = (brand) => {
-    if (selectedBrands.includes(brand)) {
-      setSelectedBrands(selectedBrands.filter(b => b !== brand));
-    } else {
-      setSelectedBrands([...selectedBrands, brand]);
-    }
-  };
+  
 
   const handleAddToCartClick = async (productId) => {
     await addToCart(productId);
@@ -83,8 +78,12 @@ const Category = () => {
             <Link
               key={cat.slug}
               to={`/category/${cat.slug}`}
-              className={`category-tab ${cat.slug === slug ? 'active' : ''}`}
-            >
+              className={`category-tab ${
+ 
+  (selectedBrands.length > 0 && cat.slug === slug)
+    ? 'active'
+    : ''
+}`} >
               {cat.name}
             </Link>
           ))}
@@ -144,7 +143,7 @@ const Category = () => {
         {/* Products Section */}
         <div className="products-section">
           <p className="results-count">
-            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'} found
+            {filteredProducts.length} {filteredProducts.length === 1 ? 'products' : 'products'} found
           </p>
 
           <div className="products-grid">
@@ -158,7 +157,6 @@ const Category = () => {
                 </div>
                 <div className="product-info">
                   <h3>{product.name}</h3>
-                  {product.brand && <p className="product-brand">{product.brand}</p>}
                   <p className="product-description">{product.description}</p>
                   <div className="product-pricing">
                     {product.discount > 0 ? (

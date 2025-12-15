@@ -46,18 +46,15 @@ const Header = () => {
             {user ? (
               <div className="account-menu">
                 <div className="account-icon">
-                  {profile?.photo_url ? (
-                    <img src={profile.photo_url} alt="Profile" />
-                  ) : (
+                  {
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <circle cx="12" cy="8" r="4" strokeWidth="2"/>
                       <path d="M6 21V19C6 17 8 15 12 15C16 15 18 17 18 19V21" strokeWidth="2"/>
                     </svg>
-                  )}
+                  }
                 </div>
                 <div className="account-dropdown">
                   <p className="user-name">{profile?.name || user.email}</p>
-                  <p className="user-email">{user.email}</p>
                   <button onClick={handleLogout} className="logout-btn">
                     {t('logout')}
                   </button>

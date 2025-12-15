@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext({});
 export const useAuth = () => useContext(AuthContext);
 
-const BACKEND_URL = "http://localhost:5000/api/users"; // adjust if needed
+const BACKEND_URL = "shoe-shop-website-gray.vercel.app/api/users"; // adjust if needed
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   // LOGIN
   const signIn = async (email, password) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/users/login`, {
+      const res = await fetch(`https://shoe-shop-website-gray.vercel.app/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 setUser(data.user);
 localStorage.setItem('user', JSON.stringify(data.user));
 if (data.user.role === 'admin' || data.user.role === 'manager') {
-  window.location.href = `http://localhost:5175?user=${encodeURIComponent(JSON.stringify(data.user))}`;
+  window.location.href = `shoe-shop-website-gray.vercel.app?user=${encodeURIComponent(JSON.stringify(data.user))}`;
 } else {
  
   navigate('/');
@@ -57,7 +57,7 @@ if (data.user.role === 'admin' || data.user.role === 'manager') {
   // SIGNUP (customer only)
   const signUp = async (name, email, password) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/users/register`, {
+      const res = await fetch(`https://shoe-shop-website-gray.vercel.app/api/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
