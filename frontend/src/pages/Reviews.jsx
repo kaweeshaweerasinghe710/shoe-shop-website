@@ -29,7 +29,7 @@ const itemsPerView = 3; // 3 on desktop, adjust based on screen size
   // ⭐ LOAD REVIEWS
   const loadReviews = async () => {
     try {
-      const response = await fetch('https://shoe-shop-website-m48s.vercel.app/api/reviews');
+      const response = await fetch('fantastic-abundance-production.up.railway.app/api/reviews');
       const data = await response.json();
 
       setReviews(data.data || []);
@@ -41,7 +41,7 @@ const itemsPerView = 3; // 3 on desktop, adjust based on screen size
   // ⭐ LOAD PRODUCTS
   const loadProducts = async () => {
     try {
-      const response = await fetch('https://shoe-shop-website-m48s.vercel.app/api/products');
+      const response = await fetch('fantastic-abundance-production.up.railway.app/api/products');
       const data = await response.json();
       setProducts(data || []);
     } catch (error) {
