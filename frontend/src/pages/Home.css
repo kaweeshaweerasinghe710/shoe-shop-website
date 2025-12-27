@@ -11,9 +11,10 @@
   padding: 8rem 2rem;
   text-align: center;
   color: #ffffff;
-  opacity: 0.05;
+  opacity: 0.75;
 }
 .hero-img{
+   min-height: 60vh;
    background-size: cover;
   background-position: left 62%;
   background-attachment: fixed;   
