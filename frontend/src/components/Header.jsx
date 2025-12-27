@@ -18,7 +18,7 @@ const Header = () => {
       <div className="header-top">
         <div className="container">
           <div className="logo">
-            <h1>{t('shopName')}</h1>
+            <h1>{t('Onero Fashion House')}</h1>
           </div>
 
           <div className="header-actions">

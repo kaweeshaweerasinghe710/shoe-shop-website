@@ -98,7 +98,7 @@ function Dashboard() {
                 <tr key={order._id}>
                   <td>#{order._id.slice(-6)}</td>
                   <td>{order.user}</td>
-                  <td>${order.totalPrice.toFixed(2)}</td>
+                  <td>LKR {order.totalPrice.toFixed(2)}</td>
                   <td>
                     <span className={`status-badge status-${order.action}`}>
                       {order.status}

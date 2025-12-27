@@ -132,7 +132,7 @@ function Orders() {
                     <span className="no-address">No address</span>
                   )}
                 </td>
-                <td className="price">${order.totalPrice.toFixed(2)}</td>
+                <td className="price">LKR{order.totalPrice.toFixed(2)}</td>
                 <td>{new Date(order.createdAt).toLocaleDateString()}</td>
                 <td>
                   <select

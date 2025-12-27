@@ -9,7 +9,7 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-content">
         <div className="footer-section">
-          <h3>Onero Shoe House</h3>
+          <h3>Onero Fashion House</h3>
           <p>Your trusted destination for quality footwear, bags, and accessories. Style meets comfort at Elite Shoe Shop.</p>
         </div>
 
