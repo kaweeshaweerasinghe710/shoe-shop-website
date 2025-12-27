@@ -95,7 +95,7 @@ const Cart = () => {
                   </div>
 
                   <div className="item-total">
-                    ${(discountedPrice * item.quantity).toFixed(2)}
+                    LKR {(discountedPrice * item.quantity).toFixed(2)}
                   </div>
 
                   <button
@@ -115,13 +115,13 @@ const Cart = () => {
 
             <div className="summary-row">
               <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>LKR{subtotal.toFixed(2)}</span>
             </div>
 
             {totalDiscount > 0 && (
               <div className="summary-row discount-row">
                 <span>Discount</span>
-                <span>-${totalDiscount.toFixed(2)}</span>
+                <span>-LKR{totalDiscount.toFixed(2)}</span>
               </div>
             )}
 
@@ -129,7 +129,7 @@ const Cart = () => {
 
             <div className="summary-row total-row">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>LKR{total.toFixed(2)}</span>
             </div>
 
             {/* Checkout button */}
