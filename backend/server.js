@@ -1,4 +1,6 @@
 require('dotenv').config();
+const serverless = require('serverless-http');
+const app = require('../backend/server'); // adjust path
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -8,8 +10,8 @@ const app = express();
 
 app.use(cors({
   origin: [
-    "https://shoe-shop-website-frontend.vercel.app",
-    "https://shoe-shop-website-gray.vercel.app"
+    "https://shoe-shop-website-two.vercel.app/",
+    "https://shoe-shop-website-m48s.vercel.app/"
   ],
   credentials: true
 }));

@@ -19,7 +19,7 @@ const [error, setError] = useState(''); // For handling errors
 
      try {
       // Send data to backend
-      const response = await fetch('https://shoe-shop-website-gray.vercel.app/api/messages', {
+      const response = await fetch('https://shoe-shop-website-m48s.vercel.app/api/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

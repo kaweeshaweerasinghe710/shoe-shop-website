@@ -9,7 +9,7 @@ export const CartProvider = ({ children }) => {
   // Load cart
   const loadCart = async () => {
     try {
-      const res = await fetch("https://shoe-shop-website-gray.vercel.app/api/cart");
+      const res = await fetch("https://shoe-shop-website-m48s.vercel.app/api/cart");
       const data = await res.json();
       setCart(data.items || []);
     } catch (err) {
@@ -24,7 +24,7 @@ export const CartProvider = ({ children }) => {
   // Add product to cart
   const addToCart = async (productId) => {
     try {
-      await fetch("https://shoe-shop-website-gray.vercel.app/api/cart", {
+      await fetch("https://shoe-shop-website-m48s.vercel.app/api/cart", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ productId, quantity: 1 }),
@@ -38,7 +38,7 @@ export const CartProvider = ({ children }) => {
   // Update quantity
   const updateQuantity = async (productId, quantity) => {
     try {
-      await fetch(`https://shoe-shop-website-gray.vercel.app/api/cart/${productId}`, {
+      await fetch(`https://shoe-shop-website-m48s.vercel.app/api/cart/${productId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity }),
@@ -52,7 +52,7 @@ export const CartProvider = ({ children }) => {
   // Remove item
   const removeFromCart = async (productId) => {
     try {
-      await fetch(`https://shoe-shop-website-gray.vercel.app/api/cart/${productId}`, {
+      await fetch(`https://shoe-shop-website-m48s.vercel.app/api/cart/${productId}`, {
         method: "DELETE",
       });
       await loadCart();
