@@ -59,7 +59,7 @@ const itemsPerView = 3; // 3 on desktop, adjust based on screen size
     }
 
     try {
-      const response = await fetch('https://shoe-shop-website-m48s.vercel.app/api/reviews', {
+      const response = await fetch('fantastic-abundance-production.up.railway.app/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

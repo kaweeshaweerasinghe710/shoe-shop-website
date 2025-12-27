@@ -15,7 +15,7 @@ const Home = () => {
 
 const loadFeaturedProducts = async () => {
   try {
-    const response = await fetch('https://shoe-shop-website-m48s.vercel.app/api/products');
+    const response = await fetch('fantastic-abundance-production.up.railway.app/api/products');
     const data = await response.json();
 
     // ✅ Filter only discounted products and take first 3

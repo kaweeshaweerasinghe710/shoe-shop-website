@@ -9,8 +9,8 @@ const cors = require('cors');
 
 app.use(cors({
   origin:[
-          "https://shoe-shop-website-frontend.vercel.app",
-          "https://shoe-shop-website-gray.vercel.app" 
+          "https://shoe-shop-website-two.vercel.app/",
+          "fantastic-abundance-production.up.railway.app" 
         ] ,
   credentials: true
 }));
