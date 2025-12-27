@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+import HomeImg from "../assets/home.jpg";
 import './Home.css';
 
 const Home = () => {
@@ -37,6 +38,7 @@ const loadFeaturedProducts = async () => {
   return (
     <div className="home">
       <section className="hero">
+        <img src={HomeImg} alt="home image" />
         <div className="hero-content">
           <h1>Welcome to Onero Shoe House</h1>
           <p>Discover the perfect blend of style, comfort, and quality</p>
