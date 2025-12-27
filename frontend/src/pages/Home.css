@@ -4,25 +4,16 @@
 
 .hero {
   min-height: 60vh;
-  background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 30%, rgba(149, 152, 159, 0.65) 100%);
+  background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 30%, rgba(149, 152, 159, 0.65) 100%),
+              url('https://i.pinimg.com/736x/d4/44/26/d44426bacd45d2c3523abd6790e8f051.jpg');
   background-size: cover;
   background-position: left 62%;
   background-attachment: fixed;   
   padding: 8rem 2rem;
   text-align: center;
   color: #ffffff;
-  opacity: 0.75;
+  opacity: 0.95;
 }
-.hero-img{
-   min-height: 60vh;
-   background-size: cover;
-  background-position: left 62%;
-  background-attachment: fixed;   
-  padding: 8rem 2rem;
-  opacity: 0.45;
-
-}
-
 
 .hero-content h1 {
   font-size: 3.5rem;
