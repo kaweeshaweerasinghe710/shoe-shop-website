@@ -66,13 +66,13 @@ const Cart = () => {
                   <div className="item-pricing">
                     {product.discount > 0 ? (
                       <>
-                        <span className="original-price">${product.price}</span>
+                        <span className="original-price">LKR {product.price}</span>
                         <span className="discounted-price">
                           {product.discount}%
                         </span>
                       </>
                     ) : (
-                      <span className="price">${product.price}</span>
+                      <span className="price">LKR {product.price}</span>
                     )}
                   </div>
 
