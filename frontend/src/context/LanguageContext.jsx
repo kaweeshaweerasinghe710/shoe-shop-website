@@ -6,7 +6,7 @@ export const useLanguage = () => useContext(LanguageContext);
 
 const translations = {
   en: {
-    shopName: "Onero Shoe Shop",
+    shopName: "Onero Fashion House",
     home: "Home",
     aboutUs: "About Us",
     shopNow: "Shop Now",
