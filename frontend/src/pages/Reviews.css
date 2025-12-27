@@ -190,7 +190,7 @@
 .review-card {
   min-width: calc(33.333% - 1rem);
   flex-shrink: 0;
-  background: rgba(133, 128, 128, 0.95);
+  background: rgba(239, 231, 231, 0.95);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 20px;
