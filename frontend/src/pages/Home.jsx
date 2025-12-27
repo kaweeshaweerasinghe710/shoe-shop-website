@@ -38,7 +38,7 @@ const loadFeaturedProducts = async () => {
     <div className="home">
       <section className="hero">
         <div className="hero-content">
-          <h1>Welcome to Onero Shoe House</h1>
+          <h1>Welcome to Onero Fashion House</h1>
           <p>Discover the perfect blend of style, comfort, and quality</p>
           <Link to="/shop" className="cta-button">
             {t('shopNow')}
