@@ -38,7 +38,9 @@ const loadFeaturedProducts = async () => {
   return (
     <div className="home">
       <section className="hero">
+        <div className="hero-img">
         <img src={HomeImg} alt="home image" />
+        </div>
         <div className="hero-content">
           <h1>Welcome to Onero Shoe House</h1>
           <p>Discover the perfect blend of style, comfort, and quality</p>

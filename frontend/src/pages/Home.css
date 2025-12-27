@@ -11,8 +11,13 @@
   padding: 8rem 2rem;
   text-align: center;
   color: #ffffff;
+  opacity: 0.05;
+}
+.hero-img{
+  
   opacity: 0.95;
 }
+
 
 .hero-content h1 {
   font-size: 3.5rem;
