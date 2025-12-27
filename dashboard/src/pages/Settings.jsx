@@ -29,7 +29,7 @@ function Settings() {
   const fetchShopDetails = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/shop');
+      const response = await fetch('https://strong-courage-production.up.railway.app/api/shop');
       const data = await response.json();
 
       if (data._id) {
@@ -64,7 +64,7 @@ function Settings() {
 
     try {
       const method = shopExists ? 'PUT' : 'POST';
-      const response = await fetch('http://localhost:5000/api/shop', {
+      const response = await fetch('https://strong-courage-production.up.railway.app/api/shop', {
         method,
         headers: {
           'Content-Type': 'application/json',

@@ -23,7 +23,7 @@ function Offers() {
   const fetchOffers = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/offers');
+      const response = await fetch('https://strong-courage-production.up.railway.app/api/offers');
       if (!response.ok) throw new Error('Failed to fetch offers');
       const data = await response.json();
       setOffers(data);
@@ -55,7 +55,7 @@ function Offers() {
   const handleDeleteOffer = async (id) => {
     if (window.confirm('Are you sure you want to delete this offer?')) {
       try {
-        const response = await fetch(`http://localhost:5000/api/offers/${id}`, {
+        const response = await fetch(`https://strong-courage-production.up.railway.app/api/offers/${id}`, {
           method: 'DELETE',
         });
         if (!response.ok) throw new Error('Failed to delete offer');
@@ -71,7 +71,7 @@ function Offers() {
     try {
       if (editingOffer) {
         // Update existing offer
-        const response = await fetch(`http://localhost:5000/api/offers/${editingOffer._id}`, {
+        const response = await fetch(`https://strong-courage-production.up.railway.app/api/offers/${editingOffer._id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ function Offers() {
         setOffers(offers.map((o) => (o._id === editingOffer._id ? updatedOffer : o)));
       } else {
         // Create new offer
-        const response = await fetch('http://localhost:5000/api/offers', {
+        const response = await fetch('https://strong-courage-production.up.railway.app/api/offers', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

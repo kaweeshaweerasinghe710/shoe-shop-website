@@ -12,7 +12,7 @@ function Orders() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/orders');
+      const response = await fetch('https://strong-courage-production.up.railway.app/api/orders');
       const data = await response.json();
       setOrders(data);
       setLoading(false);
@@ -24,7 +24,7 @@ function Orders() {
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/orders/${orderId}`, {
+      const response = await fetch(`https://strong-courage-production.up.railway.app/api/orders/${orderId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),

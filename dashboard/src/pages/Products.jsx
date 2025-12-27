@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
 import './Products.css';
 
-const API_URL = 'http://localhost:5000/api/products'; // Update with your backend URL
-const CATEGORIES_API_URL = 'http://localhost:5000/api/categories'; // Update with your backend URL
+const API_URL = 'https://strong-courage-production.up.railway.app/api/products'; // Update with your backend URL
+const CATEGORIES_API_URL = 'https://strong-courage-production.up.railway.app/api/categories'; // Update with your backend URL
 
 function Modal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null;

@@ -22,7 +22,7 @@ function Roles() {
 
   const fetchAllUsers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/users');
+      const response = await fetch('https://strong-courage-production.up.railway.app/api/users');
       const data = await response.json();
       setUsers(data);
       setLoading(false);
@@ -34,7 +34,7 @@ function Roles() {
 
   const handleRoleChange = async (userId, newRole) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}`, {
+      const response = await fetch(`https://strong-courage-production.up.railway.app/api/users/${userId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

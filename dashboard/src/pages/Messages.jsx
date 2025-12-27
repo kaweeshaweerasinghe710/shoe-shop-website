@@ -12,7 +12,7 @@ export default function Messages() {
 
   const fetchMessages = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/messages');
+      const res = await fetch('https://strong-courage-production.up.railway.app/api/messages');
       
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);

@@ -19,11 +19,11 @@ function Dashboard() {
     try {
       // Fetch all counts
       const [productsRes, ordersRes, reviewsRes, usersRes, recentOrdersRes] = await Promise.all([
-        fetch('http://localhost:5000/api/products'),
-        fetch('http://localhost:5000/api/orders'),
-        fetch('http://localhost:5000/api/reviews'),
-        fetch('http://localhost:5000/api/users'),
-        fetch('http://localhost:5000/api/orders')
+        fetch('https://strong-courage-production.up.railway.app/api/products'),
+        fetch('https://strong-courage-production.up.railway.app/api/orders'),
+        fetch('https://strong-courage-production.up.railway.app/api/reviews'),
+        fetch('https://strong-courage-production.up.railway.app/api/users'),
+        fetch('https://strong-courage-production.up.railway.app/api/orders')
       ]);
 
       const products = await productsRes.json();
