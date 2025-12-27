@@ -3,7 +3,7 @@
 }
 
 .hero {
-  min-height: 60vh;
+  height: 60vh;
   background: linear-gradient(135deg, rgba(30, 60, 114, 0.95) 30%, rgba(149, 152, 159, 0.65) 100%),
               url('https://i.pinimg.com/736x/d4/44/26/d44426bacd45d2c3523abd6790e8f051.jpg');
   background-size: cover;
