@@ -9,6 +9,7 @@ const cors = require('cors');
 
 app.use(cors({
   origin:[
+            "http://localhost:5173",
           "https://shoe-shop-website-production.up.railway.app",
           "https://strong-courage-production.up.railway.app/" 
         ] ,
