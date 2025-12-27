@@ -16,7 +16,7 @@ const Shop = () => {
   const loadCategories = async () => {
     try {
       setLoading(true);
-      const res = await fetch('fantastic-abundance-production.up.railway.app/api/categories'); // your backend URL
+      const res = await fetch('https://strong-courage-production.up.railway.app/api/categories'); // your backend URL
       if (!res.ok) throw new Error('Failed to fetch');
       const data = await res.json();
       setCategories(data || []);
@@ -79,7 +79,7 @@ const Shop = () => {
 
 const loadCategories = async () => {
   try {
-    const res = await fetch('fantastic-abundance-production.up.railway.app/api/categories');
+    const res = await fetch('https://strong-courage-production.up.railway.app/api/categories');
     if (!res.ok) throw new Error('Failed to fetch');
     const data = await res.json();
     console.log('Categories from backend:', data); // <-- check this

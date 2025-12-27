@@ -19,7 +19,7 @@ const [error, setError] = useState(''); // For handling errors
 
      try {
       // Send data to backend
-      const response = await fetch('fantastic-abundance-production.up.railway.app/api/messages', {
+      const response = await fetch('https://strong-courage-production.up.railway.app/api/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

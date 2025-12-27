@@ -1,4 +1,4 @@
-// server.js
+
 require('dotenv').config(); // must be first so process.env is populated
 
 const express = require('express');
@@ -10,7 +10,7 @@ const cors = require('cors');
 app.use(cors({
   origin:[
           "https://shoe-shop-website-production.up.railway.app",
-          "fantastic-abundance-production.up.railway.app" 
+          "https://strong-courage-production.up.railway.app/" 
         ] ,
   credentials: true
 }));

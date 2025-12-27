@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext({});
 export const useAuth = () => useContext(AuthContext);
 
-const BACKEND_URL = "fantastic-abundance-production.up.railway.app/api/users"; // adjust if needed
+const BACKEND_URL = "https://strong-courage-production.up.railway.app/api/users"; // adjust if needed
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
   // LOGIN
   const signIn = async (email, password) => {
     try {
-      const res = await fetch(`fantastic-abundance-production.up.railway.app/api/users/login`, {
+      const res = await fetch(`https://strong-courage-production.up.railway.app/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -57,7 +57,7 @@ if (data.user.role === 'admin' || data.user.role === 'manager') {
   // SIGNUP (customer only)
   const signUp = async (name, email, password) => {
     try {
-      const res = await fetch(`fantastic-abundance-production.up.railway.app/api/users/register`, {
+      const res = await fetch(`https://strong-courage-production.up.railway.app/api/users/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),
