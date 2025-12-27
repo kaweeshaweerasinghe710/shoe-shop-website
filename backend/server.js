@@ -1,88 +1,43 @@
-// server.js
-require('dotenv').config(); // must be first so process.env is populated
+require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
-const path = require('path');
-const app = express();
 const cors = require('cors');
 
+const app = express();
+
 app.use(cors({
-  origin:[
-          "https://shoe-shop-website-frontend.vercel.app",
-          "https://shoe-shop-website-gray.vercel.app" 
-        ] ,
+  origin: [
+    "https://shoe-shop-website-frontend.vercel.app",
+    "https://shoe-shop-website-gray.vercel.app"
+  ],
   credentials: true
 }));
 
+app.use(express.json());
 
-app.use(express.json()); // parse JSON
+// routes
+app.use('/api/reviews', require('./routes/reviewRoutes'));
+app.use('/api/messages', require('./routes/messageRoutes'));
+app.use('/api/categories', require('./routes/categoryRoutes'));
+app.use('/api/products', require('./routes/productRoutes'));
+app.use('/api/cart', require('./routes/cartRoutes'));
+app.use('/api/orders', require('./routes/orderRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/offers', require('./routes/offerRoutes'));
+app.use('/api/shop', require('./routes/shopRoutes'));
 
-
-
-
-// Middleware
-app.use(express.json()); // parse application/json
-
-// Mount routes (note: reviewRoutes requires the Review model)
-const reviewRoutes = require('./routes/reviewRoutes');
-app.use('/api/reviews', reviewRoutes);
-
-//messageRoutes requires the Review model
-const messageRoutes = require('./routes/messageRoutes');
-app.use('/api/messages', messageRoutes)
-
-// categoryRoutes requires the Category model
-const categoryRoutes = require('./routes/categoryRoutes');
-app.use('/api/categories', categoryRoutes);
-
-//productRoutes requires the Review model
-const productRoutes = require('./routes/productRoutes');
-app.use('/api/products', productRoutes);
-
-//cartRoutes requires the Review model
-const cartRoutes = require('./routes/cartRoutes');
-app.use('/api/cart', cartRoutes);
-
-//orderRoutes requires the Review model
-const orderRoutes = require('./routes/orderRoutes');
-app.use('/api/orders', orderRoutes);
-
-//userRoutes requires the Review model
-const userRoutes = require('./routes/userRoutes');
-app.use('/api/users', userRoutes);
-
-// offerRoutes
-const offerRoutes = require('./routes/offerRoutes');
-app.use('/api/offers', offerRoutes);
-
-// shopRoutes
-const shopRoutes = require('./routes/shopRoutes');
-app.use('/api/shop', shopRoutes);
-
-
-
-// health check
 app.get('/', (req, res) => res.send('API is running'));
 
-// DB connection and server start
-const MONGO_URI = process.env.MONGO_URI || process.env.DB_URI || process.env.CONNECTION_URI;
-console.log('Starting server. MONGO_URI defined?', Boolean(MONGO_URI));
+const MONGO_URI = process.env.MONGO_URI;
 
 if (!MONGO_URI) {
-  console.error('❌ Missing MongoDB connection string. Set MONGO_URI in your .env or environment variables.');
-  process.exit(1);
+  throw new Error("❌ MONGO_URI is missing");
 }
 
-mongoose.connect(MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => {
-    console.log('✅ MongoDB connected');
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-  })
-  .catch(err => {
-    console.error('❌ Connection Error:', err);
-    process.exit(1);
-  });
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch(err => console.error(err));
+
+
+module.export
