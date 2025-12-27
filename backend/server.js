@@ -40,4 +40,5 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error(err));
 
 
-module.export
+// Export the Express app for Vercel
+module.exports = app;
