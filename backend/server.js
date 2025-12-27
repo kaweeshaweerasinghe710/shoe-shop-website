@@ -9,7 +9,7 @@ const cors = require('cors');
 
 app.use(cors({
   origin:[
-          "https://shoe-shop-website-two.vercel.app/",
+          "https://shoe-shop-website-production.up.railway.app",
           "fantastic-abundance-production.up.railway.app" 
         ] ,
   credentials: true
