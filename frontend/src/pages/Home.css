@@ -14,8 +14,12 @@
   opacity: 0.05;
 }
 .hero-img{
-  
-  opacity: 0.95;
+   background-size: cover;
+  background-position: left 62%;
+  background-attachment: fixed;   
+  padding: 8rem 2rem;
+  opacity: 0.45;
+
 }
 
 
