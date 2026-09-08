@@ -15,7 +15,7 @@ const Home = () => {
 
 const loadFeaturedProducts = async () => {
   try {
-    const response = await fetch('https://strong-courage-production.up.railway.app/api/products');
+    const response = await fetch((import.meta.env.VITE_API_URL || 'https://strong-courage-production.up.railway.app/api') + '/products');
     const data = await response.json();
 
     // ✅ Filter only discounted products and take first 3

@@ -31,7 +31,7 @@ const Category = () => {
   // Fetch products for the selected category
   const loadCategory = async () => {
     try {
-      const res = await fetch(`https://strong-courage-production.up.railway.app/api/products?category=${slug}`);
+      const res = await fetch((import.meta.env.VITE_API_URL || 'https://strong-courage-production.up.railway.app/api') + '/products?category=${slug}');
       const data = await res.json();
       setProducts(data);
       setCategory({ name: slug });
@@ -43,7 +43,7 @@ const Category = () => {
   // Fetch all categories from products
   const loadAllCategories = async () => {
     try {
-      const res = await fetch("https://strong-courage-production.up.railway.app/api/products");
+      const res = await fetch((import.meta.env.VITE_API_URL || 'https://strong-courage-production.up.railway.app/api') + '/products');
       const data = await res.json();
       const categories = [...new Set(data.map(p => p.category))].map(name => ({ name, slug: name }));
       setAllCategories(categories);
